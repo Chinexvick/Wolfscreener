@@ -30,7 +30,7 @@ function Picker({ value, onChange }: { value: string; onChange: (v: string) => v
     <select value={value} onChange={(e) => onChange(e.target.value)} className="h-11 w-full rounded-xl border border-line bg-surface px-3 text-sm font-semibold outline-none focus:border-brand">
       {tokens.map((t) => (
         <option key={t.id} value={t.id}>
-          {t.symbol} — {t.name}
+          {t.symbol}
         </option>
       ))}
     </select>
@@ -59,17 +59,19 @@ export function CompareClient() {
           </div>
         ))}
       </div>
-      <table className="w-full text-sm">
+      <div className="overflow-x-auto">
+      <table className="w-full table-fixed text-xs sm:text-sm">
         <tbody>
           {rows.map((r, i) => (
             <tr key={r.label} className={cx("border-t border-line", i % 2 === 1 && "bg-surface-2")}>
-              <th className="w-1/3 px-4 py-2.5 text-left text-xs font-semibold text-muted">{r.label}</th>
-              <td className="tabular px-2 py-2.5 font-semibold">{r.get(ta)}</td>
-              <td className="tabular px-4 py-2.5 font-semibold">{r.get(tb)}</td>
+              <th className="w-[34%] px-3 py-2.5 text-left text-xs font-semibold text-muted sm:px-4">{r.label}</th>
+              <td className="tabular px-2 py-2.5 font-semibold break-words">{r.get(ta)}</td>
+              <td className="tabular px-2 py-2.5 font-semibold break-words sm:px-4">{r.get(tb)}</td>
             </tr>
           ))}
         </tbody>
       </table>
+      </div>
       <p className="border-t border-line p-4 text-xs text-muted">WOLF never declares a winner. Compare the underlying data and make your own decision.</p>
     </div>
   );

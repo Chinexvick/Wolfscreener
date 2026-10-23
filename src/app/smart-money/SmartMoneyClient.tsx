@@ -22,7 +22,7 @@ export function SmartMoneyClient() {
                   #{i + 1}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <Link href={`/wallet?address=${encodeURIComponent(w.label)}`} className="font-display font-bold text-accent hover:underline">
+                  <Link href={`/wallet?address=${encodeURIComponent(w.label)}`} className="-my-1 inline-block max-w-full truncate py-1 font-display font-bold text-accent hover:underline">
                     {w.label}
                   </Link>
                   <div className="flex items-center gap-2 font-mono text-[11px] text-muted">
@@ -63,7 +63,7 @@ export function SmartMoneyClient() {
                     <li key={k} className="flex items-center justify-between">
                       <span>
                         <span className={cx("font-bold", r.side === "Bought" ? "text-up" : "text-down")}>{r.side}</span>{" "}
-                        <Link href={`/token/${t.id}`} className="font-semibold hover:underline">
+                        <Link href={`/token/${t.id}`} className="-my-1.5 inline-block py-1.5 font-semibold hover:underline">
                           ${t.symbol}
                         </Link>
                       </span>

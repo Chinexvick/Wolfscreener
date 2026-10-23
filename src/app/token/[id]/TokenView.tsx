@@ -73,7 +73,7 @@ export function TokenView({ id }: { id: string }) {
                 <span className="rounded-full px-2 py-0.5 font-semibold text-white" style={{ background: chain.color }}>
                   {chain.name}
                 </span>
-                <button type="button" onClick={() => navigator.clipboard?.writeText(t.address)} className="inline-flex items-center gap-1 font-mono hover:text-ink">
+                <button type="button" onClick={() => navigator.clipboard?.writeText(t.address)} className="-my-2 inline-flex items-center gap-1 py-2 font-mono hover:text-ink">
                   {shortAddr(t.address)} <Copy className="size-3" />
                 </button>
                 <span>· {age(t.ageMinutes)} old</span>
@@ -150,7 +150,7 @@ export function TokenView({ id }: { id: string }) {
           <Card>
             <CardHeader title="Price" />
             <AreaChart data={chart} height={220} color={t.change24h >= 0 ? "var(--up)" : "var(--down)"} />
-            <div className="grid grid-cols-2 gap-4 p-4 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-3">
               <PressureBar buy={t.buys} sell={t.sells} labels={["Buyers", "Sellers"]} />
               <PressureBar buy={50 + t.whaleActivity / 4} sell={50} labels={["Whale in", "Whale out"]} />
               <PressureBar buy={50 + t.smartMoney / 3} sell={60} labels={["Smart in", "Smart out"]} />

@@ -151,7 +151,7 @@ export function CardHeader({ icon, title, action, href }: { icon?: ReactNode; ti
         {title}
       </h2>
       {action && href && (
-        <Link href={href} className="text-xs font-semibold text-accent hover:underline">
+        <Link href={href} className="-my-2.5 -mr-1 inline-block px-1 py-2.5 text-xs font-semibold text-accent hover:underline">
           {action} →
         </Link>
       )}

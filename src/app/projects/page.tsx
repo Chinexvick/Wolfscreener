@@ -30,7 +30,7 @@ export default function ProjectsPage() {
                 <TokenAvatar token={t} size={44} />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5">
-                    <Link href={`/token/${t.id}?tab=project`} className="font-display font-bold hover:underline">
+                    <Link href={`/token/${t.id}?tab=project`} className="-my-1 inline-block py-1 font-display font-bold hover:underline">
                       {t.name}
                     </Link>
                     {done === 5 && <BadgeCheck className="size-4 text-accent" />}

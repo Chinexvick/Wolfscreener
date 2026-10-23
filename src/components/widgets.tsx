@@ -35,7 +35,7 @@ export function MarketOverview() {
           <BarChart3 className="size-4 text-brand" />
           {`${name} Market Overview`}
         </h2>
-        <Link href="/radar" aria-label="Open radar" className="text-muted hover:text-ink">
+        <Link href="/radar" aria-label="Open radar" className="-m-2.5 p-2.5 text-muted hover:text-ink">
           <ChevronRight className="size-4" />
         </Link>
       </div>

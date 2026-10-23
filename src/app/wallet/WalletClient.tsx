@@ -118,7 +118,7 @@ export function WalletClient() {
                     <Eye className="size-3" /> READ-ONLY
                   </span>
                 </div>
-                <button type="button" onClick={() => navigator.clipboard?.writeText(data.address)} className="flex items-center gap-1 font-mono text-xs text-muted">
+                <button type="button" onClick={() => navigator.clipboard?.writeText(data.address)} className="-my-2 flex items-center gap-1 py-2 font-mono text-xs text-muted">
                   {shortAddr(data.address)} <Copy className="size-3" />
                 </button>
               </div>
@@ -216,7 +216,7 @@ export function WalletClient() {
               {data.txs.map((x, i) => (
                 <li key={i} className="flex items-center gap-3 border-t border-line px-4 py-2.5 text-sm">
                   <span className={cx("w-16 text-xs font-bold", x.side === "Received" ? "text-up" : "text-down")}>{x.side}</span>
-                  <Link href={`/token/${x.t.id}`} className="flex-1 font-semibold">
+                  <Link href={`/token/${x.t.id}`} className="-my-1.5 flex-1 py-1.5 font-semibold">
                     ${x.t.symbol} <span className="text-xs font-normal text-muted">· {chainById[x.t.chain].short}</span>
                   </Link>
                   <span className="tabular font-semibold">{usd(x.usd)}</span>

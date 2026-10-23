@@ -174,17 +174,15 @@ export function Shell({ children }: { children: ReactNode }) {
 
           {/* Mobile */}
           <div className="space-y-3 px-4 pt-4 pb-3 lg:hidden">
-            <div className="flex items-center gap-1.5">
-              <div className="min-w-0 flex-1">
-                <Logo size={38} compact />
-              </div>
-              <ThemeToggle small />
+            <div className="flex items-center justify-between gap-3">
+              <Logo size={40} compact />
               <ConnectWallet compact />
             </div>
             <SearchBox />
             <div className="flex items-center gap-2">
               <ChainSelect />
               <div className="ml-auto flex items-center gap-2">
+                <ThemeToggle />
                 <BellLink />
                 <button
                   type="button"

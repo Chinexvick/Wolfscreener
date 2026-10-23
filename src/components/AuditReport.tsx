@@ -171,7 +171,7 @@ export function AuditReport({ token, compact }: { token: Token; compact?: boolea
                   <button
                     type="button"
                     onClick={() => navigator.clipboard?.writeText(token.address)}
-                    className="mt-1 inline-flex items-center gap-1 font-mono text-[11px] text-white/70 hover:text-white"
+                    className="-my-1 mt-1 inline-flex items-center gap-1 py-2 font-mono text-[11px] text-white/70 hover:text-white"
                   >
                     {shortAddr(token.address)} <Copy className="size-3" />
                   </button>

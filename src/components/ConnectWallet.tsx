@@ -22,13 +22,14 @@ export function ConnectWallet({ compact }: { compact?: boolean }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
+        aria-label="Connect wallet"
         className={cx(
           "inline-flex items-center gap-2 rounded-full bg-brand font-semibold text-white shadow-sm transition hover:brightness-105",
-          compact ? "h-10 gap-1.5 px-2.5 text-[11px]" : "h-11 px-5 text-sm",
+          compact ? "h-10 shrink-0 gap-1.5 px-3 text-xs max-[359px]:size-10 max-[359px]:justify-center max-[359px]:px-0" : "h-11 px-5 text-sm",
         )}
       >
-        <Wallet className={compact ? "size-3.5" : "size-4"} />
-        Connect Wallet
+        <Wallet className={compact ? "size-4" : "size-4"} />
+        <span className={compact ? "max-[359px]:hidden" : ""}>Connect Wallet</span>
       </button>
       {open && (
         <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center" onClick={() => setOpen(false)}>
