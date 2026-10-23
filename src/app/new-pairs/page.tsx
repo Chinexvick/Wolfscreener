@@ -9,7 +9,7 @@ export default function NewPairsPage() {
   return (
     <>
       <PageHeader
-        icon={<Sparkles className="size-7 text-gold" />}
+        icon={<Sparkles className="size-7 text-brand" />}
         title="WOLF New Pairs"
         subtitle="Newly created pairs with initial vs current liquidity, LP status, taxes, contract risk and audit status — the moment they appear."
       />

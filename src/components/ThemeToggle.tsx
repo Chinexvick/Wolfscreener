@@ -17,7 +17,7 @@ export function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-label="Toggle theme"
-      className="grid size-10 place-items-center rounded-full border border-line bg-surface text-ink hover:border-gold/60"
+      className="grid size-10 place-items-center rounded-full border border-line bg-surface text-ink hover:border-brand/60"
     >
       <Sun className="size-[18px] dark:hidden" />
       <Moon className="hidden size-[18px] dark:block" />

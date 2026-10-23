@@ -47,7 +47,7 @@ export function DeveloperClient() {
         <TokenAvatar token={t} size={44} />
         <div className="flex-1">
           <div className="flex items-center gap-1.5 font-display font-bold">
-            {t.name} <BadgeCheck className="size-4 text-emerald" />
+            {t.name} <BadgeCheck className="size-4 text-accent" />
           </div>
           <div className="text-xs text-muted">Managing ${t.symbol} · Project owner</div>
         </div>
@@ -146,19 +146,19 @@ export function DeveloperClient() {
 
       {tab === "AI assistant" && (
         <Card className="flex min-h-[420px] flex-col">
-          <CardHeader icon={<Sparkles className="size-4 text-gold" />} title="WOLF AI Project Assistant" />
+          <CardHeader icon={<Sparkles className="size-4 text-brand" />} title="WOLF AI Project Assistant" />
           <div className="flex-1 space-y-3 px-4">
             {chat.length === 0 && <p className="text-sm text-muted">Ask about your token. Answers use available platform and on-chain data.</p>}
             {chat.map((m, i) => (
               <div key={i} className="space-y-2">
-                <div className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-gold px-3 py-2 text-sm text-black">{m.q}</div>
+                <div className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-brand px-3 py-2 text-sm text-white">{m.q}</div>
                 <div className="w-fit max-w-[90%] rounded-2xl rounded-bl-sm bg-surface-2 px-3 py-2 text-sm">{m.a}</div>
               </div>
             ))}
           </div>
           <div className="no-scrollbar flex gap-2 overflow-x-auto px-4 pt-3">
             {questions.map((q) => (
-              <button type="button" key={q} onClick={() => answer(q)} className="shrink-0 rounded-full border border-line px-3 py-1.5 text-xs font-semibold hover:border-gold/60">
+              <button type="button" key={q} onClick={() => answer(q)} className="shrink-0 rounded-full border border-line px-3 py-1.5 text-xs font-semibold hover:border-brand/60">
                 {q}
               </button>
             ))}
@@ -170,8 +170,8 @@ export function DeveloperClient() {
             }}
             className="flex gap-2 p-4"
           >
-            <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask anything about your token…" className="h-11 flex-1 rounded-xl border border-line bg-surface-2 px-3 text-sm outline-none focus:border-gold" />
-            <button type="submit" aria-label="Send" className="grid size-11 place-items-center rounded-xl bg-gold text-black">
+            <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask anything about your token…" className="h-11 flex-1 rounded-xl border border-line bg-surface-2 px-3 text-sm outline-none focus:border-brand" />
+            <button type="submit" aria-label="Send" className="grid size-11 place-items-center rounded-xl bg-brand text-white">
               <Send className="size-4" />
             </button>
           </form>
@@ -192,7 +192,7 @@ export function DeveloperClient() {
             ].map(([l, done]) => (
               <li key={l as string} className="flex items-center justify-between rounded-xl border border-line px-3 py-2.5 text-sm">
                 <span className="font-semibold">{l}</span>
-                <span className={cx("rounded-full px-2.5 py-0.5 text-xs font-bold", done ? "bg-up-soft text-up" : "bg-gold text-black")}>{done ? "Verified" : "Apply"}</span>
+                <span className={cx("rounded-full px-2.5 py-0.5 text-xs font-bold", done ? "bg-up-soft text-up" : "bg-brand text-white")}>{done ? "Verified" : "Apply"}</span>
               </li>
             ))}
           </ul>

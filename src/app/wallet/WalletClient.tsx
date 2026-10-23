@@ -9,7 +9,7 @@ import { Card, CardHeader, Stat, TokenAvatar, cx } from "@/components/ui";
 import { chainById, chains, hashString, rng, smartWallets, tokens } from "@/lib/data";
 import { num, price, shortAddr, usd } from "@/lib/format";
 
-const palette = ["#13703a", "#f7b915", "#0052ff", "#9945ff", "#e5484d", "#12a150", "#d99100", "#6b7266"];
+const palette = ["#7c3aed", "#c4b5fd", "#0052ff", "#9945ff", "#e5484d", "#12a150", "#d99100", "#6b7266"];
 const STORE = "wolf-saved-wallets";
 
 export function WalletClient() {
@@ -77,10 +77,10 @@ export function WalletClient() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Wallet address or @label (e.g. @WolfAlpha)"
-            className="h-12 w-full rounded-xl border border-line bg-surface-2 pr-3 pl-10 font-mono text-sm outline-none focus:border-gold"
+            className="h-12 w-full rounded-xl border border-line bg-surface-2 pr-3 pl-10 font-mono text-sm outline-none focus:border-brand"
           />
         </div>
-        <button type="submit" className="h-12 rounded-xl bg-gold px-6 text-sm font-bold text-black">
+        <button type="submit" className="h-12 rounded-xl bg-brand px-6 text-sm font-bold text-white">
           Analyze wallet
         </button>
       </form>
@@ -88,7 +88,7 @@ export function WalletClient() {
       {saved.length > 0 && (
         <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 lg:mx-0 lg:px-0">
           {saved.map((s) => (
-            <Link key={s.addr} href={`/wallet?address=${encodeURIComponent(s.addr)}`} className="shrink-0 rounded-full border border-gold/60 bg-gold-soft px-3.5 py-1.5 text-xs font-semibold text-gold-ink">
+            <Link key={s.addr} href={`/wallet?address=${encodeURIComponent(s.addr)}`} className="shrink-0 rounded-full border border-brand/60 bg-brand-soft px-3.5 py-1.5 text-xs font-semibold text-brand-ink">
               ★ {s.name}
             </Link>
           ))}
@@ -98,8 +98,8 @@ export function WalletClient() {
       {!data && (
         <div className="grid grid-cols-[minmax(0,1fr)] gap-3 sm:grid-cols-4">
           {smartWallets.slice(0, 4).map((w) => (
-            <Link key={w.label} href={`/wallet?address=${encodeURIComponent(w.label)}`} className="card p-4 hover:border-gold/60">
-              <div className="font-display font-bold text-emerald">{w.label}</div>
+            <Link key={w.label} href={`/wallet?address=${encodeURIComponent(w.label)}`} className="card p-4 hover:border-brand/60">
+              <div className="font-display font-bold text-accent">{w.label}</div>
               <div className="font-mono text-[11px] text-muted">{shortAddr(w.address)}</div>
               <div className="mt-2 text-sm font-semibold">{usd(w.value)}</div>
             </Link>
@@ -114,7 +114,7 @@ export function WalletClient() {
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <h2 className="font-display text-xl font-extrabold">{data.label ?? "Wallet"}</h2>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-soft px-2 py-0.5 text-[10px] font-bold text-emerald">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-accent-soft px-2 py-0.5 text-[10px] font-bold text-accent">
                     <Eye className="size-3" /> READ-ONLY
                   </span>
                 </div>
@@ -127,9 +127,9 @@ export function WalletClient() {
                   value={nick}
                   onChange={(e) => setNick(e.target.value)}
                   placeholder="Custom name"
-                  className="h-10 w-36 rounded-xl border border-line bg-surface-2 px-3 text-sm outline-none focus:border-gold"
+                  className="h-10 w-36 rounded-xl border border-line bg-surface-2 px-3 text-sm outline-none focus:border-brand"
                 />
-                <button type="button" onClick={save} className="inline-flex h-10 items-center gap-1.5 rounded-xl bg-gold px-3 text-sm font-bold text-black">
+                <button type="button" onClick={save} className="inline-flex h-10 items-center gap-1.5 rounded-xl bg-brand px-3 text-sm font-bold text-white">
                   <Bookmark className="size-4" /> Save
                 </button>
               </div>
@@ -203,7 +203,7 @@ export function WalletClient() {
                 <CardHeader title="Activity by hour (UTC)" />
                 <div className="grid grid-cols-12 gap-1 px-4 pb-4">
                   {data.activity.map((v, i) => (
-                    <span key={i} title={`${i}:00`} className="aspect-square rounded" style={{ background: `color-mix(in srgb, var(--emerald) ${Math.round(v * 100)}%, var(--surface-3))` }} />
+                    <span key={i} title={`${i}:00`} className="aspect-square rounded" style={{ background: `color-mix(in srgb, var(--accent) ${Math.round(v * 100)}%, var(--surface-3))` }} />
                   ))}
                 </div>
               </Card>

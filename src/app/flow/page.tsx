@@ -21,7 +21,7 @@ export default function FlowPage() {
   ];
   return (
     <>
-      <PageHeader icon={<Waves className="size-7 text-emerald" />} title="WOLF Flow" subtitle="Where money, liquidity and holders are moving right now — across the market and per chain." />
+      <PageHeader icon={<Waves className="size-7 text-accent" />} title="WOLF Flow" subtitle="Where money, liquidity and holders are moving right now — across the market and per chain." />
       <div className="grid grid-cols-[minmax(0,1fr)] gap-4 sm:gap-6 lg:grid-cols-3">
         {flows.map((f) => (
           <Card key={f.title} className="p-4">

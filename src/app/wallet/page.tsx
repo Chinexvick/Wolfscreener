@@ -10,7 +10,7 @@ export default function WalletPage() {
   return (
     <>
       <PageHeader
-        icon={<Wallet className="size-7 text-emerald" />}
+        icon={<Wallet className="size-7 text-accent" />}
         title="Wallet Intelligence"
         subtitle="Enter any wallet or WOLF username to see holdings, transfers, P&L where calculable and activity patterns. Read-only, always."
       />

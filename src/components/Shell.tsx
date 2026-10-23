@@ -23,7 +23,7 @@ export function Logo({ size = 40, withText = true }: { size?: number; withText?:
       {withText && (
         <span className="leading-none">
           <span className="block font-display text-lg font-extrabold tracking-tight whitespace-nowrap">
-            <span className="text-emerald">WOLF</span>
+            <span className="text-accent">WOLF</span>
             <span className="text-ink">-SCREENER</span>
           </span>
           <span className="mt-1 block text-[8.5px] font-semibold tracking-[0.12em] whitespace-nowrap text-muted uppercase">{brand.tagline}</span>
@@ -72,7 +72,7 @@ function SideNav({ onNavigate }: { onNavigate?: () => void }) {
                     onClick={onNavigate}
                     className={cx(
                       "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition",
-                      active ? "bg-gold font-semibold text-black shadow-sm" : "text-ink hover:bg-surface-3",
+                      active ? "bg-brand font-semibold text-white shadow-sm" : "text-ink hover:bg-surface-3",
                     )}
                   >
                     <Icon className="size-[18px]" />
@@ -90,12 +90,12 @@ function SideNav({ onNavigate }: { onNavigate?: () => void }) {
 
 function PromoCard() {
   return (
-    <Link href="/rewards" className="relative block overflow-hidden rounded-2xl bg-[#0c1a10] text-white">
+    <Link href="/rewards" className="relative block overflow-hidden rounded-2xl bg-[#0b0712] text-white">
       <img src={brand.promo} alt="" className="h-56 w-full object-cover object-top" />
       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/80 to-transparent p-4 pt-16">
-        <div className="font-display text-lg font-extrabold text-gold">Join the Pack</div>
+        <div className="font-display text-lg font-extrabold text-violet-300">Join the Pack</div>
         <p className="text-xs text-white/80">Earn XP from Cub to Apex. Smarter research, better decisions.</p>
-        <span className="mt-3 inline-flex rounded-lg bg-gold px-3 py-1.5 text-xs font-bold text-black">Start earning →</span>
+        <span className="mt-3 inline-flex rounded-lg bg-brand px-3 py-1.5 text-xs font-bold text-white">Start earning →</span>
       </div>
     </Link>
   );
@@ -137,7 +137,7 @@ export function Shell({ children }: { children: ReactNode }) {
             </div>
             <div className="min-w-0 flex-1 lg:hidden">
               <span className="font-display text-[15px] font-extrabold tracking-tight whitespace-nowrap">
-                <span className="text-emerald">WOLF</span>-SCREENER
+                <span className="text-accent">WOLF</span>-SCREENER
               </span>
             </div>
             <SearchBox className="hidden max-w-xl flex-1 lg:block" />
@@ -187,7 +187,7 @@ export function Shell({ children }: { children: ReactNode }) {
               return (
                 <li key={href}>
                   <Link href={href} className={cx("flex flex-col items-center gap-1 py-2.5 text-[10px] font-semibold", active ? "text-ink" : "text-muted")}>
-                    <span className={cx("grid h-7 w-12 place-items-center rounded-full transition", active && "bg-gold text-black")}>
+                    <span className={cx("grid h-7 w-12 place-items-center rounded-full transition", active && "bg-brand text-white")}>
                       <Icon className="size-[18px]" />
                     </span>
                     {label}
@@ -201,7 +201,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 onClick={() => setMoreOpen(true)}
                 className={cx("flex w-full flex-col items-center gap-1 py-2.5 text-[10px] font-semibold", moreActive ? "text-ink" : "text-muted")}
               >
-                <span className={cx("grid h-7 w-12 place-items-center rounded-full", moreActive && "bg-gold text-black")}>
+                <span className={cx("grid h-7 w-12 place-items-center rounded-full", moreActive && "bg-brand text-white")}>
                   <Ellipsis className="size-[18px]" />
                 </span>
                 More
@@ -232,7 +232,7 @@ export function Shell({ children }: { children: ReactNode }) {
                     onClick={() => setChain(c.id as ChainFilter)}
                     className={cx(
                       "shrink-0 rounded-full border px-3 py-1.5 text-xs font-semibold",
-                      chain === c.id ? "border-gold bg-gold text-black" : "border-line",
+                      chain === c.id ? "border-brand bg-brand text-white" : "border-line",
                     )}
                   >
                     {c.name}

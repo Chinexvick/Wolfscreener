@@ -27,19 +27,19 @@ const quick = [
 
 function Hero() {
   return (
-    <section className="relative overflow-hidden rounded-3xl border border-line bg-[#fdf6e3] dark:bg-[#141a12]">
+    <section className="relative overflow-hidden rounded-3xl border border-line bg-[#f5f0ff] dark:bg-[#110c1a]">
       <img
         src={brand.hero}
         alt=""
         className="absolute inset-0 h-full w-full object-cover object-[78%_center] opacity-95 dark:opacity-70"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-[#fdf6e3] via-[#fdf6e3]/85 to-transparent sm:via-[#fdf6e3]/70 dark:from-[#0b0f0c] dark:via-[#0b0f0c]/85" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#f5f0ff] via-[#f5f0ff]/85 to-transparent sm:via-[#f5f0ff]/70 dark:from-[#09070d] dark:via-[#09070d]/85" />
       <div className="relative px-5 py-6 sm:px-8 sm:py-9">
         <div className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 px-3 py-1 text-[11px] font-semibold backdrop-blur">
           <span className="live-dot size-2 rounded-full bg-up" /> Live data · 9 chains
         </div>
         <h1 className="mt-3 max-w-[15ch] font-display text-[28px] leading-[1.05] font-extrabold tracking-tight sm:max-w-xl sm:text-5xl">
-          <span className="text-emerald">See everything.</span>
+          <span className="text-accent">See everything.</span>
           <br />
           Before everyone.
         </h1>
@@ -53,8 +53,8 @@ function Hero() {
               href={href}
               className={
                 primary
-                  ? "inline-flex shrink-0 items-center gap-2 rounded-xl bg-gold px-4 py-2.5 text-sm font-bold text-black shadow-sm"
-                  : "inline-flex shrink-0 items-center gap-2 rounded-xl border border-line bg-surface/90 px-4 py-2.5 text-sm font-semibold backdrop-blur hover:border-gold/60"
+                  ? "inline-flex shrink-0 items-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-sm font-bold text-white shadow-sm"
+                  : "inline-flex shrink-0 items-center gap-2 rounded-xl border border-line bg-surface/90 px-4 py-2.5 text-sm font-semibold backdrop-blur hover:border-brand/60"
               }
             >
               <Icon className="size-4" /> {label}
@@ -106,7 +106,7 @@ export default function Home() {
       <div className="card grid grid-cols-2 gap-4 p-4 lg:grid-cols-4">
         {pillars.map(({ icon: Icon, title, text }) => (
           <div key={title} className="flex gap-3">
-            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-gold-soft text-gold-ink">
+            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-soft text-brand-ink">
               <Icon className="size-5" />
             </span>
             <div>

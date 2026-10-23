@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "Token Battles" };
 export default function ComparePage() {
   return (
     <>
-      <PageHeader icon={<Swords className="size-7 text-gold" />} title="WOLF Token Battles" subtitle="Side-by-side comparison of market, audit, liquidity, holder and developer data." />
+      <PageHeader icon={<Swords className="size-7 text-brand" />} title="WOLF Token Battles" subtitle="Side-by-side comparison of market, audit, liquidity, holder and developer data." />
       <Suspense fallback={<div className="card h-64 animate-pulse" />}>
         <CompareClient />
       </Suspense>

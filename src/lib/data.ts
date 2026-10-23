@@ -313,10 +313,10 @@ export function buildAudit(token: Token): Audit {
   ];
 
   const distRaw = [
-    ["Liquidity pool", 8 + r() * 20, "#13703a"],
+    ["Liquidity pool", 8 + r() * 20, "#7c3aed"],
     ["Burn address", r() * 25, "#6b7266"],
     ["Team / deployer", 2 + r() * 14, "#e5484d"],
-    ["Treasury", r() * 12, "#f7b915"],
+    ["Treasury", r() * 12, "#c4b5fd"],
     ["Marketing", r() * 5, "#d99100"],
     ["Exchanges", r() * 15, "#0052ff"],
     ["Community", 20 + r() * 40, "#12a150"],
@@ -452,8 +452,8 @@ export interface FeedAlert {
   usd?: number;
 }
 
-export const alertMeta: Record<AlertKind, { label: string; emoji: string; tone: "up" | "down" | "warn" | "gold" }> = {
-  whale: { label: "Whale", emoji: "🐋", tone: "gold" },
+export const alertMeta: Record<AlertKind, { label: string; emoji: string; tone: "up" | "down" | "warn" | "brand" }> = {
+  whale: { label: "Whale", emoji: "🐋", tone: "brand" },
   liquidity: { label: "Liquidity", emoji: "💧", tone: "down" },
   dev: { label: "Developer", emoji: "🛠️", tone: "warn" },
   smart: { label: "Smart Money", emoji: "🧠", tone: "up" },

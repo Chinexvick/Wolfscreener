@@ -16,7 +16,7 @@ export default function ProjectsPage() {
         title="WOLF Projects"
         subtitle="Project profiles with verification that clearly states what was checked. Verification is not a guarantee of any project or token."
       >
-        <Link href="/developer" className="inline-flex h-11 items-center justify-center rounded-xl bg-gold px-5 text-sm font-bold text-black">
+        <Link href="/developer" className="inline-flex h-11 items-center justify-center rounded-xl bg-brand px-5 text-sm font-bold text-white">
           List your project
         </Link>
       </PageHeader>
@@ -33,7 +33,7 @@ export default function ProjectsPage() {
                     <Link href={`/token/${t.id}?tab=project`} className="font-display font-bold hover:underline">
                       {t.name}
                     </Link>
-                    {done === 5 && <BadgeCheck className="size-4 text-emerald" />}
+                    {done === 5 && <BadgeCheck className="size-4 text-accent" />}
                     {t.promoted && <PromotedTag />}
                   </div>
                   <div className="text-xs text-muted">
@@ -52,7 +52,7 @@ export default function ProjectsPage() {
               </div>
               <div className="mt-3 flex items-center justify-between border-t border-line pt-3">
                 <LpBadge status={t.lp} />
-                <Link href={`/token/${t.id}`} className="text-xs font-semibold text-emerald">
+                <Link href={`/token/${t.id}`} className="text-xs font-semibold text-accent">
                   View intelligence →
                 </Link>
               </div>

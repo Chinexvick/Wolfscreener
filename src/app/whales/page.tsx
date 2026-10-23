@@ -13,7 +13,7 @@ export default function WhalesPage() {
   return (
     <>
       <PageHeader
-        icon={<Fish className="size-7 text-gold" />}
+        icon={<Fish className="size-7 text-brand" />}
         title="WOLF Whale Radar"
         subtitle="Real-time whale buys, transfers, accumulation and distribution. Tap any alert to investigate the wallet and token."
       />

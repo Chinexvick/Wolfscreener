@@ -10,7 +10,7 @@ export default function AuditPage() {
   return (
     <>
       <PageHeader
-        icon={<ShieldCheck className="size-7 text-emerald" />}
+        icon={<ShieldCheck className="size-7 text-accent" />}
         title="WOLF AI Audit"
         subtitle="Enter any supported token contract. WOLF AI produces a continuously updated professional audit with evidence and an explainable score."
       />

@@ -38,10 +38,10 @@ export function AuditClient() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Paste token contract address…"
-            className="h-12 flex-1 rounded-xl border border-line bg-surface-2 px-4 font-mono text-sm outline-none focus:border-gold"
+            className="h-12 flex-1 rounded-xl border border-line bg-surface-2 px-4 font-mono text-sm outline-none focus:border-brand"
             aria-label="Token contract address"
           />
-          <button type="submit" className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-gold px-6 text-sm font-bold text-black">
+          <button type="submit" className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-brand px-6 text-sm font-bold text-white">
             <ShieldCheck className="size-4" /> Run WOLF AI Audit
           </button>
         </div>
@@ -55,7 +55,7 @@ export function AuditClient() {
                   type="button"
                   key={t.id}
                   onClick={() => router.push(`/audit?address=${t.address}`)}
-                  className="inline-flex shrink-0 items-center gap-2 rounded-full border border-line px-3 py-1.5 text-xs font-semibold hover:border-gold/60"
+                  className="inline-flex shrink-0 items-center gap-2 rounded-full border border-line px-3 py-1.5 text-xs font-semibold hover:border-brand/60"
                 >
                   <TokenAvatar token={t} size={20} /> {t.symbol}
                 </button>
@@ -99,7 +99,7 @@ function AuditRun({ token }: { token: Token }) {
       <ul className="space-y-2.5">
         {steps.map((s, i) => (
           <li key={s} className={i <= step ? "flex items-center gap-2 text-sm font-semibold" : "flex items-center gap-2 text-sm text-muted"}>
-            {i < step ? <ShieldCheck className="size-4 text-up" /> : i === step ? <Loader2 className="size-4 animate-spin text-gold" /> : <span className="size-4" />}
+            {i < step ? <ShieldCheck className="size-4 text-up" /> : i === step ? <Loader2 className="size-4 animate-spin text-brand" /> : <span className="size-4" />}
             {s}
           </li>
         ))}

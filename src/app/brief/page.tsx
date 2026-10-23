@@ -17,12 +17,12 @@ export default function BriefPage() {
   return (
     <>
       <PageHeader
-        icon={<Newspaper className="size-7 text-emerald" />}
+        icon={<Newspaper className="size-7 text-accent" />}
         title="WOLF AI Daily Brief"
         subtitle="Your personalized intelligence report: watchlist changes, whales, smart money, audit-score changes, liquidity and new narratives."
       />
-      <Card className="mb-4 bg-gradient-to-br from-emerald to-[#0a3a1d] p-5 text-white sm:mb-6">
-        <div className="text-[11px] font-bold tracking-[0.14em] text-gold uppercase">Today in 30 seconds</div>
+      <Card className="mb-4 bg-gradient-to-br from-[#5b21b6] to-[#0b0712] p-5 text-white sm:mb-6">
+        <div className="text-[11px] font-bold tracking-[0.14em] text-violet-300 uppercase">Today in 30 seconds</div>
         <p className="mt-2 text-sm leading-relaxed sm:text-base">
           Market activity is up with AI and DePIN leading holder growth. {movers[0].symbol} moved {movers[0].change24h.toFixed(0)}% on{" "}
           {usd(movers[0].volume24h)} volume. {sm.label} was the most active smart-money wallet. {scoreChanges.length} audit scores on tokens you watch changed
@@ -63,7 +63,7 @@ export default function BriefPage() {
           <ul className="grid grid-cols-1 gap-x-6 px-4 pb-4 text-sm sm:grid-cols-2">
             {smartWallets.slice(0, 4).map((w) => (
               <li key={w.label} className="flex justify-between border-t border-line py-2">
-                <span className="font-semibold text-emerald">{w.label}</span>
+                <span className="font-semibold text-accent">{w.label}</span>
                 <span>
                   {w.recent[0].side} <b>${tokenById(w.recent[0].tokenId)!.symbol}</b> · {usd(w.recent[0].usd)}
                 </span>

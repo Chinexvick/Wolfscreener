@@ -9,7 +9,7 @@ export default function ScreenerPage() {
   return (
     <>
       <PageHeader
-        icon={<ScanSearch className="size-7 text-emerald" />}
+        icon={<ScanSearch className="size-7 text-accent" />}
         title="Multi-Chain Screener"
         subtitle="Filter tokens across Ethereum, BNB Chain, Solana, Base, TON, Arbitrum, Polygon, Avalanche and Sui. Save your own screening conditions."
       />

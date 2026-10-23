@@ -112,7 +112,7 @@ function WalletGraph({ a }: { a: Audit }) {
             <div key={id}>
               {i > 0 && (
                 <div className="flex items-center gap-2 py-1 pl-5 text-[11px] text-muted">
-                  <ArrowDown className="size-4 text-gold" />
+                  <ArrowDown className="size-4 text-brand" />
                   <span className="font-semibold text-ink">{e?.amount}</span> · {e?.when}
                 </div>
               )}
@@ -156,14 +156,14 @@ export function AuditReport({ token, compact }: { token: Token; compact?: boolea
     <div className="space-y-4 sm:space-y-5">
       {/* Score header */}
       <Card className="overflow-hidden">
-        <div className="bg-gradient-to-br from-emerald to-[#0a3a1d] p-4 text-white sm:p-6">
+        <div className="bg-gradient-to-br from-[#5b21b6] to-[#0b0712] p-4 text-white sm:p-6">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
             {!compact && (
               <div className="flex items-center gap-3 sm:w-64">
                 <TokenAvatar token={token} size={48} />
                 <div className="min-w-0">
                   <div className="flex items-center gap-1.5 font-display text-xl font-bold">
-                    {token.name} {token.verified && <VerifiedBadge className="text-gold" />}
+                    {token.name} {token.verified && <VerifiedBadge className="text-violet-300" />}
                   </div>
                   <div className="flex items-center gap-2 text-xs text-white/70">
                     ${token.symbol} · {chainById[token.chain].name}
@@ -179,11 +179,11 @@ export function AuditReport({ token, compact }: { token: Token; compact?: boolea
               </div>
             )}
             <div className="flex flex-1 items-center gap-4">
-              <div className="rounded-full bg-white/95 p-1.5">
+              <div className="rounded-full bg-surface p-1.5">
                 <ScoreRing score={a.overall} size={92} stroke={8} label="WOLF AI Audit Score" />
               </div>
               <div>
-                <div className="text-[11px] font-bold tracking-[0.14em] text-gold uppercase">WOLF AI Audit Score</div>
+                <div className="text-[11px] font-bold tracking-[0.14em] text-violet-300 uppercase">WOLF AI Audit Score</div>
                 <div className="font-display text-3xl font-extrabold">
                   {a.overall}
                   <span className="text-lg text-white/60">/100</span>
@@ -197,7 +197,7 @@ export function AuditReport({ token, compact }: { token: Token; compact?: boolea
               <button
                 type="button"
                 onClick={() => setMonitoring((m) => !m)}
-                className={cx("inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold", monitoring ? "bg-white text-emerald" : "bg-gold text-black")}
+                className={cx("inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold", monitoring ? "bg-white text-accent" : "bg-brand text-white")}
               >
                 <Bell className="size-4" /> {monitoring ? "Monitoring on" : "Monitor token"}
               </button>
@@ -217,12 +217,12 @@ export function AuditReport({ token, compact }: { token: Token; compact?: boolea
               Buy {token.buyTax}% · Sell {token.sellTax}%
             </span>
             <span className="ml-auto flex items-center gap-1 text-[11px] font-semibold text-white/80">
-              <ShieldCheck className="size-3.5 text-gold" /> This audit cannot be bought.
+              <ShieldCheck className="size-3.5 text-violet-300" /> This audit cannot be bought.
             </span>
           </div>
         </div>
         <div className="flex gap-3 p-4">
-          <Sparkles className="mt-0.5 size-5 shrink-0 text-gold" />
+          <Sparkles className="mt-0.5 size-5 shrink-0 text-brand" />
           <div>
             <div className="text-xs font-bold text-muted uppercase">AI summary</div>
             <p className="text-sm">{a.summary}</p>
@@ -232,13 +232,13 @@ export function AuditReport({ token, compact }: { token: Token; compact?: boolea
 
       <div className="grid grid-cols-[minmax(0,1fr)] gap-4 sm:gap-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
         <Card>
-          <CardHeader icon={<PieChart className="size-4 text-emerald" />} title="Score breakdown" />
+          <CardHeader icon={<PieChart className="size-4 text-accent" />} title="Score breakdown" />
           <p className="-mt-2 px-4 pb-2 text-xs text-muted">Tap a category to see evidence. Weighted methodology, documented inputs.</p>
           <ul>{a.categories.map((c) => <CategoryRow key={c.key} c={c} />)}</ul>
         </Card>
 
         <Card>
-          <CardHeader icon={<Info className="size-4 text-emerald" />} title="Audit history — why it changed" />
+          <CardHeader icon={<Info className="size-4 text-accent" />} title="Audit history — why it changed" />
           <div className="px-4">
             <AreaChart data={a.history.map((h) => h.score)} height={90} color={scoreColor(a.overall)} />
           </div>
@@ -263,16 +263,16 @@ export function AuditReport({ token, compact }: { token: Token; compact?: boolea
 
       <div className="grid grid-cols-[minmax(0,1fr)] gap-4 sm:gap-5 lg:grid-cols-2">
         <Card>
-          <CardHeader icon={<ShieldCheck className="size-4 text-emerald" />} title="Contract audit" />
+          <CardHeader icon={<ShieldCheck className="size-4 text-accent" />} title="Contract audit" />
           <Checklist items={a.contract} />
         </Card>
         <div className="space-y-4 sm:space-y-5">
           <Card>
-            <CardHeader icon={<Coins className="size-4 text-gold" />} title="Sellability & tax analysis" />
+            <CardHeader icon={<Coins className="size-4 text-brand" />} title="Sellability & tax analysis" />
             <Checklist items={a.sellability} />
           </Card>
           <Card>
-            <CardHeader icon={<Droplets className="size-4 text-emerald" />} title="Liquidity & LP audit" />
+            <CardHeader icon={<Droplets className="size-4 text-accent" />} title="Liquidity & LP audit" />
             <div className="space-y-3 px-4 pb-4">
               <div className="flex items-center justify-between">
                 <LpBadge status={a.lp.status} />
@@ -283,7 +283,7 @@ export function AuditReport({ token, compact }: { token: Token; compact?: boolea
               {(
                 [
                   ["Locked", a.lp.lockedPct, "var(--up)"],
-                  ["Burned", a.lp.burnedPct, "var(--emerald)"],
+                  ["Burned", a.lp.burnedPct, "var(--accent)"],
                   ["Unlocked", a.lp.unlockedPct, "var(--down)"],
                 ] as const
               ).map(([l, v, c]) => (
@@ -321,7 +321,7 @@ export function AuditReport({ token, compact }: { token: Token; compact?: boolea
       </div>
 
       <Card>
-        <CardHeader icon={<GitBranch className="size-4 text-emerald" />} title="Developer wallet movement graph" />
+        <CardHeader icon={<GitBranch className="size-4 text-accent" />} title="Developer wallet movement graph" />
         <WalletGraph a={a} />
         <div className="border-t border-line px-4 py-3">
           <div className="mb-2 text-xs font-bold text-muted uppercase">Developer wallet monitoring</div>
@@ -341,7 +341,7 @@ export function AuditReport({ token, compact }: { token: Token; compact?: boolea
 
       <div className="grid grid-cols-[minmax(0,1fr)] gap-4 sm:gap-5 lg:grid-cols-3">
         <Card>
-          <CardHeader icon={<PieChart className="size-4 text-gold" />} title="Token distribution" />
+          <CardHeader icon={<PieChart className="size-4 text-brand" />} title="Token distribution" />
           <div className="flex flex-col items-center gap-4 px-4 pb-4 sm:flex-row lg:flex-col xl:flex-row">
             <Donut parts={a.distribution} size={140} center={<span className="text-xs font-bold text-muted">Supply</span>} />
             <ul className="w-full space-y-1.5 text-xs">
@@ -356,7 +356,7 @@ export function AuditReport({ token, compact }: { token: Token; compact?: boolea
           </div>
         </Card>
         <Card>
-          <CardHeader icon={<Coins className="size-4 text-emerald" />} title="Supply audit" />
+          <CardHeader icon={<Coins className="size-4 text-accent" />} title="Supply audit" />
           <dl className="grid grid-cols-2 gap-x-3 gap-y-2.5 px-4 text-xs">
             {a.supply.map((s) => (
               <div key={s.label}>
@@ -368,7 +368,7 @@ export function AuditReport({ token, compact }: { token: Token; compact?: boolea
           <p className="m-4 rounded-xl bg-surface-2 p-3 text-xs">{a.supplyNote}</p>
         </Card>
         <Card>
-          <CardHeader icon={<Users className="size-4 text-emerald" />} title="Holder concentration" />
+          <CardHeader icon={<Users className="size-4 text-accent" />} title="Holder concentration" />
           <table className="w-full text-xs">
             <thead>
               <tr className="text-muted">
@@ -392,7 +392,7 @@ export function AuditReport({ token, compact }: { token: Token; compact?: boolea
       </div>
 
       <Card>
-        <CardHeader icon={<Fish className="size-4 text-gold" />} title="Whale risk analysis" action="Whale radar" href="/whales" />
+        <CardHeader icon={<Fish className="size-4 text-brand" />} title="Whale risk analysis" action="Whale radar" href="/whales" />
         <div className="px-2 pb-2">
           {tokenAlerts.map((x) => (
             <AlertRow key={x.id} a={x} />

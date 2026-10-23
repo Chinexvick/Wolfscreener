@@ -23,14 +23,14 @@ export default function RewardsPage() {
   const next = levels[levels.indexOf(current) + 1];
   return (
     <>
-      <PageHeader icon={<Trophy className="size-7 text-gold" />} title="WOLF Rewards" subtitle="Earn XP for legitimate participation and learning — not for trading performance." />
+      <PageHeader icon={<Trophy className="size-7 text-brand" />} title="WOLF Rewards" subtitle="Earn XP for legitimate participation and learning — not for trading performance." />
       <div className="grid grid-cols-[minmax(0,1fr)] gap-4 sm:gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)]">
         <div className="space-y-4 sm:space-y-6">
           <Card className="overflow-hidden">
-            <div className="relative bg-[#0c1a10] p-5 text-white">
+            <div className="relative bg-[#0b0712] p-5 text-white">
               <img src={brand.promo} alt="" className="absolute inset-0 h-full w-full object-cover object-top opacity-40" />
               <div className="relative">
-                <div className="flex items-center gap-2 text-xs font-bold tracking-[0.14em] text-gold uppercase">
+                <div className="flex items-center gap-2 text-xs font-bold tracking-[0.14em] text-violet-300 uppercase">
                   <Crown className="size-4" /> Your level
                 </div>
                 <div className="mt-1 font-display text-3xl font-extrabold">{current.name}</div>
@@ -39,7 +39,7 @@ export default function RewardsPage() {
                 </div>
                 {next && (
                   <div className="mt-3">
-                    <Bar value={((xp - current.xp) / (next.xp - current.xp)) * 100} color="var(--gold)" />
+                    <Bar value={((xp - current.xp) / (next.xp - current.xp)) * 100} color="var(--brand)" />
                   </div>
                 )}
               </div>
@@ -54,12 +54,12 @@ export default function RewardsPage() {
             </ol>
           </Card>
           <Card>
-            <CardHeader icon={<Gift className="size-4 text-gold" />} title="Ways to earn" />
+            <CardHeader icon={<Gift className="size-4 text-brand" />} title="Ways to earn" />
             <ul className="px-4 pb-4 text-sm">
               {earn.map(([a, b]) => (
                 <li key={a} className="flex justify-between border-t border-line py-2 first:border-t-0">
                   <span>{a}</span>
-                  <b className="text-emerald">{b}</b>
+                  <b className="text-accent">{b}</b>
                 </li>
               ))}
             </ul>
@@ -87,10 +87,10 @@ export default function RewardsPage() {
                         {t?.name ?? "WOLF"} · Reward: {q.reward}
                       </div>
                     </div>
-                    <span className="rounded-full bg-gold-soft px-2.5 py-1 text-xs font-bold text-gold-ink">+{q.xp} XP</span>
+                    <span className="rounded-full bg-brand-soft px-2.5 py-1 text-xs font-bold text-brand-ink">+{q.xp} XP</span>
                   </div>
                   <div className="mt-3 flex items-center gap-3">
-                    <Bar value={(q.done / q.total) * 100} color="var(--gold)" />
+                    <Bar value={(q.done / q.total) * 100} color="var(--brand)" />
                     <span className="text-xs font-semibold whitespace-nowrap text-muted">
                       {q.done}/{q.total}
                     </span>

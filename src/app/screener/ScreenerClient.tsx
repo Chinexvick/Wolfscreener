@@ -139,7 +139,7 @@ export function ScreenerClient() {
                   placeholder={i === 0 ? "Min" : "Max"}
                   value={(f[fd.key] as Range)[i]}
                   onChange={(e) => setRange(fd.key, i as 0 | 1, e.target.value)}
-                  className="h-9 w-full min-w-0 rounded-lg border border-line bg-surface-2 px-2.5 text-sm outline-none focus:border-gold"
+                  className="h-9 w-full min-w-0 rounded-lg border border-line bg-surface-2 px-2.5 text-sm outline-none focus:border-brand"
                 />
               ))}
             </div>
@@ -153,7 +153,7 @@ export function ScreenerClient() {
                 type="button"
                 key={r}
                 onClick={() => setF({ ...f, risk: f.risk.includes(r) ? f.risk.filter((x) => x !== r) : [...f.risk, r] })}
-                className={cx("h-9 flex-1 rounded-lg border text-xs font-semibold", f.risk.includes(r) ? "border-gold bg-gold text-black" : "border-line")}
+                className={cx("h-9 flex-1 rounded-lg border text-xs font-semibold", f.risk.includes(r) ? "border-brand bg-brand text-white" : "border-line")}
               >
                 {r}
               </button>
@@ -161,7 +161,7 @@ export function ScreenerClient() {
           </div>
         </div>
         <label className="flex items-end gap-2 pb-2 text-sm font-semibold">
-          <input type="checkbox" checked={f.verifiedOnly} onChange={(e) => setF({ ...f, verifiedOnly: e.target.checked })} className="size-4 accent-[var(--gold)]" />
+          <input type="checkbox" checked={f.verifiedOnly} onChange={(e) => setF({ ...f, verifiedOnly: e.target.checked })} className="size-4 accent-[var(--brand)]" />
           Verified projects only
         </label>
       </div>
@@ -170,7 +170,7 @@ export function ScreenerClient() {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Name this screen…"
-          className="h-10 flex-1 rounded-xl border border-line bg-surface-2 px-3 text-sm outline-none focus:border-gold"
+          className="h-10 flex-1 rounded-xl border border-line bg-surface-2 px-3 text-sm outline-none focus:border-brand"
         />
         <button
           type="button"
@@ -179,7 +179,7 @@ export function ScreenerClient() {
             persist([...saved.filter((s) => s.name !== name.trim()), { name: name.trim(), f }]);
             setName("");
           }}
-          className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-gold px-4 text-sm font-bold text-black"
+          className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-brand px-4 text-sm font-bold text-white"
         >
           <Bookmark className="size-4" /> Save screen
         </button>
@@ -198,20 +198,20 @@ export function ScreenerClient() {
           onClick={() => setOpen((o) => !o)}
           className="inline-flex shrink-0 items-center gap-2 rounded-full bg-ink px-4 py-2 text-xs font-bold text-bg"
         >
-          <SlidersHorizontal className="size-4" /> Filters {active > 0 && <span className="rounded-full bg-gold px-1.5 text-black">{active}</span>}
+          <SlidersHorizontal className="size-4" /> Filters {active > 0 && <span className="rounded-full bg-brand px-1.5 text-white">{active}</span>}
         </button>
         {presets.map((p) => (
           <button
             type="button"
             key={p.name}
             onClick={() => setF({ ...empty, ...p.f })}
-            className="shrink-0 rounded-full border border-line bg-surface px-3.5 py-2 text-xs font-semibold hover:border-gold/60"
+            className="shrink-0 rounded-full border border-line bg-surface px-3.5 py-2 text-xs font-semibold hover:border-brand/60"
           >
             {p.name}
           </button>
         ))}
         {saved.map((s) => (
-          <span key={s.name} className="inline-flex shrink-0 items-center gap-1 rounded-full border border-gold/60 bg-gold-soft py-2 pr-2 pl-3.5 text-xs font-semibold text-gold-ink">
+          <span key={s.name} className="inline-flex shrink-0 items-center gap-1 rounded-full border border-brand/60 bg-brand-soft py-2 pr-2 pl-3.5 text-xs font-semibold text-brand-ink">
             <button type="button" onClick={() => setF(s.f)}>
               ★ {s.name}
             </button>
@@ -229,7 +229,7 @@ export function ScreenerClient() {
             <div className="absolute inset-x-0 bottom-0 max-h-[88dvh] overflow-y-auto rounded-t-3xl bg-surface p-4 pb-8" onClick={(e) => e.stopPropagation()}>
               <div className="mb-3 flex items-center justify-between">
                 <h2 className="font-display text-lg font-bold">Filters</h2>
-                <button type="button" onClick={() => setOpen(false)} className="rounded-full bg-gold px-4 py-1.5 text-sm font-bold text-black">
+                <button type="button" onClick={() => setOpen(false)} className="rounded-full bg-brand px-4 py-1.5 text-sm font-bold text-white">
                   Show {source.length}
                 </button>
               </div>

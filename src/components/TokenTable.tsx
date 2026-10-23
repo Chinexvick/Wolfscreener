@@ -35,7 +35,7 @@ function WatchButton({ id }: { id: string }) {
       aria-label={on ? "Remove from watchlist" : "Add to watchlist"}
       className="grid size-8 place-items-center rounded-full hover:bg-surface-3"
     >
-      <Star className={cx("size-4", on ? "fill-gold text-gold" : "text-muted")} />
+      <Star className={cx("size-4", on ? "fill-brand text-brand" : "text-muted")} />
     </button>
   );
 }
@@ -43,7 +43,7 @@ function WatchButton({ id }: { id: string }) {
 function Row({ t, rank }: { t: LiveToken; rank: number | null }) {
   const flash = t.tick === "up" ? "flash-up" : t.tick === "down" ? "flash-down" : "";
   return (
-    <tr className={cx("border-t border-line transition hover:bg-surface-2", rank === null && "bg-gold-soft/40")}>
+    <tr className={cx("border-t border-line transition hover:bg-surface-2", rank === null && "bg-brand-soft/40")}>
       <td className="py-3 pl-4 text-xs font-semibold text-muted">{rank ?? <PromotedTag />}</td>
       <td className="py-3 pr-3">
         <Link href={`/token/${t.id}`} className="flex items-center gap-3">
@@ -92,7 +92,7 @@ function Row({ t, rank }: { t: LiveToken; rank: number | null }) {
 function MobileCard({ t, rank }: { t: LiveToken; rank: number | null }) {
   const flash = t.tick === "up" ? "flash-up" : t.tick === "down" ? "flash-down" : "";
   return (
-    <Link href={`/token/${t.id}`} className={cx("block border-t border-line px-4 py-3 active:bg-surface-2", rank === null && "bg-gold-soft/40")}>
+    <Link href={`/token/${t.id}`} className={cx("block border-t border-line px-4 py-3 active:bg-surface-2", rank === null && "bg-brand-soft/40")}>
       <div className="flex items-center gap-3">
         <div className="relative">
           <TokenAvatar token={t} size={40} />
@@ -202,7 +202,7 @@ export function TokenTable({
               setPage(0);
             }}
             placeholder="Filter by name or address…"
-            className="h-10 rounded-full border border-line bg-surface-2 px-4 text-sm outline-none focus:border-gold sm:w-64"
+            className="h-10 rounded-full border border-line bg-surface-2 px-4 text-sm outline-none focus:border-brand sm:w-64"
           />
           <div className="no-scrollbar -mx-4 flex gap-1.5 overflow-x-auto px-4 sm:mx-0 sm:px-0">
             {(["all", ...narratives] as const).map((n) => (

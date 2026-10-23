@@ -34,7 +34,7 @@ export default function NarrativesPage() {
     .sort((a, b) => b.change - a.change);
   return (
     <>
-      <PageHeader icon={<Layers className="size-7 text-emerald" />} title="WOLF Narrative Radar" subtitle="Emerging sectors detected from volume, holder growth and social momentum — and the tokens driving them." />
+      <PageHeader icon={<Layers className="size-7 text-accent" />} title="WOLF Narrative Radar" subtitle="Emerging sectors detected from volume, holder growth and social momentum — and the tokens driving them." />
       <div className="grid grid-cols-[minmax(0,1fr)] gap-4 md:grid-cols-2 xl:grid-cols-4">
         {rows.map((r, i) => (
           <Card key={r.n} className="p-4">

@@ -98,12 +98,12 @@ export function Sparkline({ data, up, width = 96, height = 28 }: { data: number[
 }
 
 export function VerifiedBadge({ className }: { className?: string }) {
-  return <BadgeCheck className={cx("size-4 shrink-0 text-emerald", className)} aria-label="Verified" />;
+  return <BadgeCheck className={cx("size-4 shrink-0 text-accent", className)} aria-label="Verified" />;
 }
 
 export function PromotedTag() {
   return (
-    <span className="rounded-md border border-gold/60 bg-gold-soft px-1.5 py-px text-[10px] font-bold tracking-wide text-gold-ink">
+    <span className="rounded-md border border-brand/60 bg-brand-soft px-1.5 py-px text-[10px] font-bold tracking-wide text-brand-ink">
       PROMOTED
     </span>
   );
@@ -111,7 +111,7 @@ export function PromotedTag() {
 
 const lpStyle: Record<LpStatus, [string, ReactNode]> = {
   LOCKED: ["bg-up-soft text-up", <Lock key="l" className="size-3" />],
-  BURNED: ["bg-emerald-soft text-emerald", <Flame key="b" className="size-3" />],
+  BURNED: ["bg-accent-soft text-accent", <Flame key="b" className="size-3" />],
   UNLOCKED: ["bg-down-soft text-down", <Unlock key="u" className="size-3" />],
   UNKNOWN: ["bg-surface-3 text-muted", <CircleHelp key="q" className="size-3" />],
 };
@@ -151,7 +151,7 @@ export function CardHeader({ icon, title, action, href }: { icon?: ReactNode; ti
         {title}
       </h2>
       {action && href && (
-        <Link href={href} className="text-xs font-semibold text-emerald hover:underline">
+        <Link href={href} className="text-xs font-semibold text-accent hover:underline">
           {action} →
         </Link>
       )}
@@ -191,7 +191,7 @@ export function Chip({ active, children, onClick }: { active?: boolean; children
       onClick={onClick}
       className={cx(
         "inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition",
-        active ? "border-gold bg-gold text-black" : "border-line bg-surface text-ink hover:border-gold/60",
+        active ? "border-brand bg-brand text-white" : "border-line bg-surface text-ink hover:border-brand/60",
       )}
     >
       {children}
@@ -199,7 +199,7 @@ export function Chip({ active, children, onClick }: { active?: boolean; children
   );
 }
 
-export function Bar({ value, color = "var(--emerald)" }: { value: number; color?: string }) {
+export function Bar({ value, color = "var(--accent)" }: { value: number; color?: string }) {
   return (
     <div className="h-2 w-full overflow-hidden rounded-full bg-surface-3">
       <div className="h-full rounded-full" style={{ width: `${Math.min(100, Math.max(0, value))}%`, background: color }} />

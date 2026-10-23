@@ -30,7 +30,7 @@ export function MarketOverview() {
 
   return (
     <Card>
-      <CardHeader icon={<Activity className="size-4 text-emerald" />} title={`${name} Market Overview`} />
+      <CardHeader icon={<Activity className="size-4 text-accent" />} title={`${name} Market Overview`} />
       <div className="grid grid-cols-3 gap-2 px-4">
         <div>
           <div className="text-[11px] text-muted">Total Mkt Cap</div>
@@ -55,7 +55,7 @@ export function MarketOverview() {
             type="button"
             key={r}
             onClick={() => setRange(r)}
-            className={cx("flex-1 rounded-full py-1.5 text-xs font-semibold", range === r ? "bg-gold text-black" : "text-muted hover:bg-surface-3")}
+            className={cx("flex-1 rounded-full py-1.5 text-xs font-semibold", range === r ? "bg-brand text-white" : "text-muted hover:bg-surface-3")}
           >
             {r}
           </button>
@@ -90,7 +90,7 @@ export function NewPairsMini({ limit = 5 }: { limit?: number }) {
   const list = [...tokens].sort((a, b) => a.ageMinutes - b.ageMinutes).slice(0, limit);
   return (
     <Card>
-      <CardHeader icon={<Sparkles className="size-4 text-gold" />} title="Recent New Pairs" action="View all" href="/new-pairs" />
+      <CardHeader icon={<Sparkles className="size-4 text-brand" />} title="Recent New Pairs" action="View all" href="/new-pairs" />
       <ul className="px-2 pb-2">
         {list.map((t) => (
           <li key={t.id}>
@@ -114,7 +114,7 @@ export function NewPairsMini({ limit = 5 }: { limit?: number }) {
 export function AlertRow({ a, compact }: { a: FeedAlert; compact?: boolean }) {
   const t = tokenById(a.tokenId)!;
   const m = alertMeta[a.kind];
-  const tone = { up: "bg-up-soft", down: "bg-down-soft", warn: "bg-warn-soft", gold: "bg-gold-soft" }[m.tone];
+  const tone = { up: "bg-up-soft", down: "bg-down-soft", warn: "bg-warn-soft", brand: "bg-brand-soft" }[m.tone];
   return (
     <Link href={`/token/${t.id}`} className="flex gap-3 rounded-xl px-2 py-2.5 hover:bg-surface-2">
       <span className={cx("grid size-9 shrink-0 place-items-center rounded-xl text-base", tone)} aria-hidden>
@@ -138,7 +138,7 @@ export function AlertFeed({ limit = 6, kinds, title = "WOLF Alerts", href = "/al
       <CardHeader
         icon={
           <span className="relative">
-            <Bell className="size-4 text-gold" />
+            <Bell className="size-4 text-brand" />
             <span className="live-dot absolute -top-0.5 -right-0.5 size-1.5 rounded-full bg-down" />
           </span>
         }
@@ -167,9 +167,9 @@ export function AiInsights() {
   ];
   return (
     <Card className="overflow-hidden">
-      <div className="flex items-center justify-between bg-gradient-to-r from-emerald to-[#0c4a26] px-4 py-3 text-white">
+      <div className="flex items-center justify-between bg-gradient-to-r from-[#5b21b6] to-[#0b0712] px-4 py-3 text-white">
         <h2 className="flex items-center gap-2 font-display text-[15px] font-bold">
-          <Sparkles className="size-4 text-gold" /> WOLF AI Insights
+          <Sparkles className="size-4 text-violet-300" /> WOLF AI Insights
         </h2>
         <span className="text-[10px] font-semibold tracking-wide text-white/70 uppercase">Updated 1m ago</span>
       </div>
@@ -177,7 +177,7 @@ export function AiInsights() {
         {insights.map(({ icon: Icon, text, href }) => (
           <li key={text}>
             <Link href={href} className="flex gap-3 px-4 py-3 text-sm hover:bg-surface-2">
-              <Icon className="mt-0.5 size-4 shrink-0 text-emerald" />
+              <Icon className="mt-0.5 size-4 shrink-0 text-accent" />
               <span>{text}</span>
             </Link>
           </li>
@@ -195,7 +195,7 @@ export function NarrativeMini() {
   const max = Math.max(...rows.map((r) => Math.abs(r.change)));
   return (
     <Card>
-      <CardHeader icon={<Layers className="size-4 text-emerald" />} title="Narrative Radar" action="Explore" href="/narratives" />
+      <CardHeader icon={<Layers className="size-4 text-accent" />} title="Narrative Radar" action="Explore" href="/narratives" />
       <ul className="space-y-2.5 px-4 pb-4">
         {rows.map((r) => (
           <li key={r.n} className="flex items-center gap-3 text-sm">
@@ -218,10 +218,10 @@ export function BreakoutRadar() {
     .slice(0, 4);
   return (
     <Card>
-      <CardHeader icon={<Zap className="size-4 text-gold" />} title="Breakout Radar" action="Radar" href="/radar" />
+      <CardHeader icon={<Zap className="size-4 text-brand" />} title="Breakout Radar" action="Radar" href="/radar" />
       <div className="grid grid-cols-2 gap-2 px-4 pb-4">
         {list.map(({ t }) => (
-          <Link key={t.id} href={`/token/${t.id}`} className="rounded-xl border border-line bg-surface-2 p-3 hover:border-gold/60">
+          <Link key={t.id} href={`/token/${t.id}`} className="rounded-xl border border-line bg-surface-2 p-3 hover:border-brand/60">
             <div className="flex items-center gap-2">
               <TokenAvatar token={t} size={24} />
               <span className="text-sm font-bold">{t.symbol}</span>
@@ -246,7 +246,7 @@ export function RecentlyAudited() {
   const list = tokens.slice(5, 10);
   return (
     <Card>
-      <CardHeader icon={<ShieldCheck className="size-4 text-emerald" />} title="Recently Audited" action="Run audit" href="/audit" />
+      <CardHeader icon={<ShieldCheck className="size-4 text-accent" />} title="Recently Audited" action="Run audit" href="/audit" />
       <ul className="px-2 pb-2">
         {list.map((t, i) => (
           <li key={t.id}>
@@ -268,12 +268,12 @@ export function RecentlyAudited() {
 export function VerifiedProjects() {
   return (
     <Card>
-      <CardHeader icon={<BadgeCheck className="size-4 text-emerald" />} title="Recently Verified" action="Projects" href="/projects" />
+      <CardHeader icon={<BadgeCheck className="size-4 text-accent" />} title="Recently Verified" action="Projects" href="/projects" />
       <div className="no-scrollbar flex gap-3 overflow-x-auto px-4 pb-4">
         {projects.slice(0, 6).map((p) => {
           const t = tokenById(p.tokenId)!;
           return (
-            <Link key={p.tokenId} href={`/projects#${t.id}`} className="w-36 shrink-0 rounded-xl border border-line bg-surface-2 p-3 hover:border-gold/60">
+            <Link key={p.tokenId} href={`/projects#${t.id}`} className="w-36 shrink-0 rounded-xl border border-line bg-surface-2 p-3 hover:border-brand/60">
               <TokenAvatar token={t} size={32} />
               <div className="mt-2 flex items-center gap-1 text-sm font-bold">
                 {t.name.split(" ")[0]} <VerifiedBadge className="size-3.5" />
@@ -291,11 +291,11 @@ export function PromotedProjects() {
   const list = tokens.filter((t) => t.promoted);
   return (
     <Card>
-      <CardHeader icon={<Megaphone className="size-4 text-gold" />} title="Promoted Projects" action="Boost yours" href="/boost" />
+      <CardHeader icon={<Megaphone className="size-4 text-brand" />} title="Promoted Projects" action="Boost yours" href="/boost" />
       <ul className="space-y-2 px-4 pb-3">
         {list.map((t) => (
           <li key={t.id}>
-            <Link href={`/token/${t.id}`} className="flex items-center gap-3 rounded-xl border border-gold/40 bg-gold-soft/40 p-2.5">
+            <Link href={`/token/${t.id}`} className="flex items-center gap-3 rounded-xl border border-brand/40 bg-brand-soft/40 p-2.5">
               <TokenAvatar token={t} size={32} />
               <span className="min-w-0 flex-1">
                 <span className="flex items-center gap-1.5 text-sm font-bold">
@@ -328,7 +328,7 @@ export function CommunityActivity() {
       <ul className="space-y-3 px-4 pb-4 text-sm">
         {items.map(([who, what]) => (
           <li key={who} className="flex gap-2">
-            <span className="font-semibold text-emerald">{who}</span>
+            <span className="font-semibold text-accent">{who}</span>
             <span className="text-muted">{what}</span>
           </li>
         ))}

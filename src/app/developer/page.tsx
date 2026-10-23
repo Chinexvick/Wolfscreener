@@ -9,7 +9,7 @@ export default function DeveloperPage() {
   return (
     <>
       <PageHeader
-        icon={<LayoutDashboard className="size-7 text-emerald" />}
+        icon={<LayoutDashboard className="size-7 text-accent" />}
         title="Developer Hub"
         subtitle="List → Verify → Analyze → Promote → Grow. Your project dashboard, promotion analytics, growth tools and AI assistant."
       />

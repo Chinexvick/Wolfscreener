@@ -13,7 +13,7 @@ export default function WatchlistPage() {
   return (
     <>
       <PageHeader
-        icon={<Star className="size-7 fill-gold text-gold" />}
+        icon={<Star className="size-7 fill-brand text-brand" />}
         title="Watchlist"
         subtitle="Tokens you follow. Your watchlist powers personalized alerts and your WOLF AI Daily Brief."
       />
@@ -21,9 +21,9 @@ export default function WatchlistPage() {
         <TokenTable source={list} tabs={["wolf", "gainers", "volume"]} defaultTab="wolf" showPromoted={false} />
       ) : (
         <div className="card flex flex-col items-center gap-3 p-10 text-center">
-          <Star className="size-10 text-gold" />
+          <Star className="size-10 text-brand" />
           <p className="max-w-sm text-sm text-muted">Tap the star on any token to follow it. You can also follow wallets, projects and narratives.</p>
-          <Link href="/screener" className="rounded-xl bg-gold px-5 py-2.5 text-sm font-bold text-black">
+          <Link href="/screener" className="rounded-xl bg-brand px-5 py-2.5 text-sm font-bold text-white">
             Find tokens
           </Link>
         </div>

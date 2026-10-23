@@ -38,7 +38,7 @@ export function NewPairsClient() {
         {list.map((t) => {
           const initial = t.liquidity * 0.55;
           return (
-            <Link key={t.id} href={`/token/${t.id}`} className="card block p-4 transition hover:border-gold/60">
+            <Link key={t.id} href={`/token/${t.id}`} className="card block p-4 transition hover:border-brand/60">
               <div className="flex items-center gap-3">
                 <TokenAvatar token={t} size={42} />
                 <div className="min-w-0 flex-1">
@@ -47,7 +47,7 @@ export function NewPairsClient() {
                     <span className="rounded-full px-2 py-px text-[10px] font-bold text-white" style={{ background: chainById[t.chain].color }}>
                       {chainById[t.chain].short}
                     </span>
-                    <span className="rounded-full bg-gold-soft px-2 py-px text-[10px] font-bold text-gold-ink">{age(t.ageMinutes)} old</span>
+                    <span className="rounded-full bg-brand-soft px-2 py-px text-[10px] font-bold text-brand-ink">{age(t.ageMinutes)} old</span>
                   </div>
                   <div className="truncate font-mono text-[11px] text-muted">{shortAddr(t.address)}</div>
                 </div>
@@ -77,7 +77,7 @@ export function NewPairsClient() {
                 <LpBadge status={t.lp} />
                 <RiskBadge risk={t.risk} />
                 <span className="inline-flex items-center gap-1 text-[11px] text-muted">
-                  <ShieldCheck className="size-3.5 text-emerald" /> Audited
+                  <ShieldCheck className="size-3.5 text-accent" /> Audited
                 </span>
                 <span className="ml-auto flex items-center gap-2 text-muted">
                   <Globe className="size-4" />

@@ -27,7 +27,7 @@ const rows: { label: string; get: (t: Token) => React.ReactNode }[] = [
 
 function Picker({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   return (
-    <select value={value} onChange={(e) => onChange(e.target.value)} className="h-11 w-full rounded-xl border border-line bg-surface px-3 text-sm font-semibold outline-none focus:border-gold">
+    <select value={value} onChange={(e) => onChange(e.target.value)} className="h-11 w-full rounded-xl border border-line bg-surface px-3 text-sm font-semibold outline-none focus:border-brand">
       {tokens.map((t) => (
         <option key={t.id} value={t.id}>
           {t.symbol} — {t.name}

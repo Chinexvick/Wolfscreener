@@ -25,15 +25,15 @@ export default function BoostPage() {
   return (
     <>
       <PageHeader
-        icon={<Megaphone className="size-7 text-gold" />}
+        icon={<Megaphone className="size-7 text-brand" />}
         title="WOLF Boost"
         subtitle="Paid visibility for projects. Every paid placement is labeled PROMOTED or SPONSORED."
       />
 
       <Card className="mb-4 overflow-hidden sm:mb-6">
         <div className="grid grid-cols-[minmax(0,1fr)] md:grid-cols-2">
-          <div className="bg-gradient-to-br from-emerald to-[#0a3a1d] p-5 text-white sm:p-6">
-            <ShieldCheck className="size-8 text-gold" />
+          <div className="bg-gradient-to-br from-[#5b21b6] to-[#0b0712] p-5 text-white sm:p-6">
+            <ShieldCheck className="size-8 text-violet-300" />
             <h2 className="mt-2 font-display text-2xl font-extrabold">The audit cannot be bought. Visibility can.</h2>
             <p className="mt-2 text-sm text-white/80">A project cannot pay to make a risky token look safe. Boost buys exposure — nothing else.</p>
           </div>
@@ -52,8 +52,8 @@ export default function BoostPage() {
 
       <div className="grid grid-cols-[minmax(0,1fr)] gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {boostPackages.map((p) => (
-          <Card key={p.name} className={cx("relative flex flex-col p-5", p.popular && "border-gold ring-2 ring-gold/40")}>
-            {p.popular && <span className="absolute -top-3 left-5 rounded-full bg-gold px-3 py-0.5 text-[11px] font-bold text-black">Most popular</span>}
+          <Card key={p.name} className={cx("relative flex flex-col p-5", p.popular && "border-brand ring-2 ring-brand/40")}>
+            {p.popular && <span className="absolute -top-3 left-5 rounded-full bg-brand px-3 py-0.5 text-[11px] font-bold text-white">Most popular</span>}
             <h3 className="font-display text-xl font-extrabold">{p.name}</h3>
             <p className="text-sm text-muted">{p.blurb}</p>
             <div className="my-4 font-display text-2xl font-bold">Contact for pricing</div>
@@ -64,7 +64,7 @@ export default function BoostPage() {
                 </li>
               ))}
             </ul>
-            <Link href="/developer" className={cx("mt-5 rounded-xl py-2.5 text-center text-sm font-bold", p.popular ? "bg-gold text-black" : "border border-line")}>
+            <Link href="/developer" className={cx("mt-5 rounded-xl py-2.5 text-center text-sm font-bold", p.popular ? "bg-brand text-white" : "border border-line")}>
               Choose {p.name}
             </Link>
           </Card>

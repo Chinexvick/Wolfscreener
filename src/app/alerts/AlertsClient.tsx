@@ -84,7 +84,7 @@ export function AlertsClient() {
           <button
             type="button"
             onClick={() => setRules([...rules, draft])}
-            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gold py-2.5 text-sm font-bold text-black sm:w-auto sm:px-5"
+            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-2.5 text-sm font-bold text-white sm:w-auto sm:px-5"
           >
             <Plus className="size-4" /> Add alert
           </button>
@@ -116,7 +116,7 @@ export function AlertsClient() {
 
         <Card className="p-4">
           <h2 className="mb-2 flex items-center gap-2 font-display text-[15px] font-bold">
-            <Share2 className="size-4 text-emerald" /> Share an alert
+            <Share2 className="size-4 text-accent" /> Share an alert
           </h2>
           <pre className="rounded-xl bg-surface-2 p-3 font-sans text-sm whitespace-pre-wrap">{shareText}</pre>
           <div className="mt-3 flex gap-2">
@@ -128,7 +128,7 @@ export function AlertsClient() {
                   navigator.clipboard?.writeText(shareText + "\nhttps://wolfscreener.app");
                   setShared(c);
                 }}
-                className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-line py-2 text-xs font-semibold hover:border-gold/60"
+                className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-line py-2 text-xs font-semibold hover:border-brand/60"
               >
                 <Send className="size-3.5" /> {c}
               </button>

@@ -32,7 +32,7 @@ export default function AdminPage() {
             {queues.map(([l, n]) => (
               <li key={l} className="flex justify-between border-t border-line py-2.5 first:border-t-0">
                 <span>{l}</span>
-                <b className="rounded-full bg-gold-soft px-2.5 text-gold-ink">{n}</b>
+                <b className="rounded-full bg-brand-soft px-2.5 text-brand-ink">{n}</b>
               </li>
             ))}
           </ul>

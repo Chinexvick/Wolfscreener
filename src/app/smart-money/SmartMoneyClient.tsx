@@ -18,11 +18,11 @@ export function SmartMoneyClient() {
           return (
             <div key={w.label} className="card p-4">
               <div className="flex items-center gap-3">
-                <span className="grid size-11 place-items-center rounded-full bg-gradient-to-br from-emerald to-[#0a3a1d] font-display text-sm font-bold text-gold">
+                <span className="grid size-11 place-items-center rounded-full bg-gradient-to-br from-[#5b21b6] to-[#0b0712] font-display text-sm font-bold text-violet-300">
                   #{i + 1}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <Link href={`/wallet?address=${encodeURIComponent(w.label)}`} className="font-display font-bold text-emerald hover:underline">
+                  <Link href={`/wallet?address=${encodeURIComponent(w.label)}`} className="font-display font-bold text-accent hover:underline">
                     {w.label}
                   </Link>
                   <div className="flex items-center gap-2 font-mono text-[11px] text-muted">
@@ -32,7 +32,7 @@ export function SmartMoneyClient() {
                 <button
                   type="button"
                   onClick={() => setFollowing(on ? following.filter((x) => x !== w.label) : [...following, w.label])}
-                  className={cx("inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold", on ? "bg-emerald-soft text-emerald" : "bg-gold text-black")}
+                  className={cx("inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold", on ? "bg-accent-soft text-accent" : "bg-brand text-white")}
                 >
                   {on ? <UserCheck className="size-3.5" /> : <UserPlus className="size-3.5" />}
                   {on ? "Following" : "Follow"}

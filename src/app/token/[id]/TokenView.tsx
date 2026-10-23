@@ -99,7 +99,7 @@ export function TokenView({ id }: { id: string }) {
                 aria-label="Watchlist"
                 className="grid size-11 place-items-center rounded-xl border border-line bg-surface"
               >
-                <Star className={cx("size-5", has(t.id) ? "fill-gold text-gold" : "")} />
+                <Star className={cx("size-5", has(t.id) ? "fill-brand text-brand" : "")} />
               </button>
               <Link href="/alerts" aria-label="Create alert" className="grid size-11 place-items-center rounded-xl border border-line bg-surface">
                 <Bell className="size-5" />
@@ -171,7 +171,7 @@ export function TokenView({ id }: { id: string }) {
                 </div>
               </div>
               <p className="mt-3 text-sm text-muted">{audit.summary}</p>
-              <button type="button" onClick={() => setTab("AI Audit")} className="mt-3 w-full rounded-xl bg-gold py-2.5 text-sm font-bold text-black">
+              <button type="button" onClick={() => setTab("AI Audit")} className="mt-3 w-full rounded-xl bg-brand py-2.5 text-sm font-bold text-white">
                 Open full audit
               </button>
             </Card>
@@ -210,7 +210,7 @@ export function TokenView({ id }: { id: string }) {
                 <span className={cx("w-10 text-xs font-bold", x.buy ? "text-up" : "text-down")}>{x.buy ? "BUY" : "SELL"}</span>
                 <span className="tabular flex-1 font-semibold">{usd(x.v)}</span>
                 <span className="tabular hidden w-28 text-right text-muted sm:block">{num(x.amount)}</span>
-                <span className={cx("w-28 truncate text-right font-mono text-xs", x.wallet.startsWith("@") ? "font-sans font-semibold text-emerald" : "text-muted")}>{x.wallet}</span>
+                <span className={cx("w-28 truncate text-right font-mono text-xs", x.wallet.startsWith("@") ? "font-sans font-semibold text-accent" : "text-muted")}>{x.wallet}</span>
                 <span className="w-9 text-right text-xs text-muted">{x.when}</span>
               </li>
             ))}
@@ -231,7 +231,7 @@ export function TokenView({ id }: { id: string }) {
                 </span>
                 <span className="hidden w-32 sm:block">
                   <span className="block h-1.5 rounded-full bg-surface-3">
-                    <span className="block h-full rounded-full bg-emerald" style={{ width: `${Math.min(100, h.pct * 6)}%` }} />
+                    <span className="block h-full rounded-full bg-accent" style={{ width: `${Math.min(100, h.pct * 6)}%` }} />
                   </span>
                 </span>
                 <span className="tabular w-14 text-right font-semibold">{h.pct}%</span>
@@ -261,7 +261,7 @@ export function TokenView({ id }: { id: string }) {
           <ul>
             {smartWallets.slice(0, 6).map((w, i) => (
               <li key={w.label} className="flex items-center gap-3 border-t border-line px-4 py-3 text-sm">
-                <Link href={`/wallet?address=${w.label}`} className="flex-1 font-semibold text-emerald">
+                <Link href={`/wallet?address=${w.label}`} className="flex-1 font-semibold text-accent">
                   {w.label}
                 </Link>
                 <span className={cx("text-xs font-bold", i % 3 === 2 ? "text-down" : "text-up")}>{i % 3 === 2 ? "Reduced" : "Accumulated"}</span>
@@ -333,7 +333,7 @@ export function TokenView({ id }: { id: string }) {
           ) : (
             <p className="text-sm text-muted">
               This project has not created a WOLF profile yet. Developers can claim it from the{" "}
-              <Link href="/developer" className="font-semibold text-emerald">
+              <Link href="/developer" className="font-semibold text-accent">
                 Developer Hub
               </Link>
               .
@@ -349,11 +349,11 @@ export function TokenView({ id }: { id: string }) {
             {["Whale buys / sells", "Developer wallet movement", "Liquidity removal", "Audit score change", "Tax change", "Top-holder selling"].map((x, i) => (
               <label key={x} className="flex items-center justify-between rounded-xl border border-line px-3 py-2.5 text-sm">
                 {x}
-                <input type="checkbox" defaultChecked={i < 3} className="size-4 accent-[var(--gold)]" />
+                <input type="checkbox" defaultChecked={i < 3} className="size-4 accent-[var(--brand)]" />
               </label>
             ))}
           </div>
-          <Link href="/alerts" className="mt-4 inline-flex rounded-xl bg-gold px-4 py-2.5 text-sm font-bold text-black">
+          <Link href="/alerts" className="mt-4 inline-flex rounded-xl bg-brand px-4 py-2.5 text-sm font-bold text-white">
             Manage delivery (Telegram, email, push)
           </Link>
         </Card>

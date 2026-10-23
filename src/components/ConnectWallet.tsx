@@ -23,12 +23,13 @@ export function ConnectWallet({ compact }: { compact?: boolean }) {
         type="button"
         onClick={() => setOpen(true)}
         className={cx(
-          "inline-flex items-center gap-2 rounded-full bg-gold font-semibold text-black shadow-sm transition hover:brightness-105",
-          compact ? "h-10 px-3.5 text-xs" : "h-11 px-5 text-sm",
+          "inline-flex items-center gap-2 rounded-full bg-brand font-semibold text-white shadow-sm transition hover:brightness-105",
+          compact ? "size-10 justify-center" : "h-11 px-5 text-sm",
         )}
+        aria-label="Connect wallet"
       >
         <Wallet className="size-4" />
-        {compact ? "Connect" : "Connect Wallet"}
+        {!compact && "Connect Wallet"}
       </button>
       {open && (
         <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center" onClick={() => setOpen(false)}>
@@ -45,7 +46,7 @@ export function ConnectWallet({ compact }: { compact?: boolean }) {
                 <X className="size-5" />
               </button>
             </div>
-            <div className="mb-4 flex gap-3 rounded-xl bg-emerald-soft p-3 text-sm text-emerald">
+            <div className="mb-4 flex gap-3 rounded-xl bg-accent-soft p-3 text-sm text-accent">
               <Eye className="mt-0.5 size-4 shrink-0" />
               <p>
                 <b>Read-only.</b> WOLF reads public on-chain data to build your portfolio intelligence. We never ask you to sign
@@ -61,14 +62,14 @@ export function ConnectWallet({ compact }: { compact?: boolean }) {
                 value={addr}
                 onChange={(e) => setAddr(e.target.value)}
                 placeholder="0x… / Solana address / @WolfAlpha"
-                className="h-11 w-full rounded-xl border border-line bg-surface-2 px-3 text-sm outline-none focus:border-gold"
+                className="h-11 w-full rounded-xl border border-line bg-surface-2 px-3 text-sm outline-none focus:border-brand"
               />
-              <button type="submit" className="h-11 w-full rounded-xl bg-gold text-sm font-bold text-black">
+              <button type="submit" className="h-11 w-full rounded-xl bg-brand text-sm font-bold text-white">
                 Track wallet
               </button>
             </form>
             <p className="mt-4 flex items-center gap-2 text-xs text-muted">
-              <ShieldCheck className="size-4 text-emerald" /> Browser-extension connect (read-only) is coming soon.
+              <ShieldCheck className="size-4 text-accent" /> Browser-extension connect (read-only) is coming soon.
             </p>
           </div>
         </div>

@@ -9,7 +9,7 @@ export default function AlertsPage() {
   return (
     <>
       <PageHeader
-        icon={<Bell className="size-7 text-gold" />}
+        icon={<Bell className="size-7 text-brand" />}
         title="WOLF Alerts"
         subtitle="Alerts for whales, developers, liquidity, contract and tax changes, minting, burns and score changes. Delivered in-app, by push, Telegram or email."
       />

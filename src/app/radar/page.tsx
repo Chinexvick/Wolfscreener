@@ -22,7 +22,7 @@ export default function RadarPage() {
   return (
     <>
       <PageHeader
-        icon={<Radar className="size-7 text-emerald" />}
+        icon={<Radar className="size-7 text-accent" />}
         title="WOLF Trend Radar"
         subtitle="Automatic detection of unusual on-chain and social activity. Informational market intelligence — not trading signals."
       />
@@ -31,7 +31,7 @@ export default function RadarPage() {
           {signals.map(({ title, icon: Icon, metric, fmt }) => (
             <Card key={title} className="p-4">
               <h2 className="mb-3 flex items-center gap-2 font-display text-[15px] font-bold">
-                <span className="grid size-8 place-items-center rounded-lg bg-gold-soft text-gold-ink">
+                <span className="grid size-8 place-items-center rounded-lg bg-brand-soft text-brand-ink">
                   <Icon className="size-4" />
                 </span>
                 {title}

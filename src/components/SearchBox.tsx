@@ -49,7 +49,7 @@ export function SearchBox({ autoFocus, onDone, className }: { autoFocus?: boolea
         onFocus={() => setOpen(true)}
         onBlur={() => setTimeout(() => setOpen(false), 150)}
         placeholder="Search token, symbol or contract address…"
-        className="h-11 w-full rounded-full border border-line bg-surface pr-10 pl-11 text-sm outline-none placeholder:text-muted focus:border-gold"
+        className="h-11 w-full rounded-full border border-line bg-surface pr-10 pl-11 text-sm outline-none placeholder:text-muted focus:border-brand"
         aria-label="Search tokens"
       />
       {q && (
@@ -86,7 +86,7 @@ export function SearchBox({ autoFocus, onDone, className }: { autoFocus?: boolea
             <div className="px-3 py-3 text-sm text-muted">
               {looksLikeAddress(query) ? (
                 <span className="flex items-center gap-2">
-                  <ShieldCheck className="size-4 text-emerald" /> Press Enter to run a WOLF AI Audit on this contract.
+                  <ShieldCheck className="size-4 text-accent" /> Press Enter to run a WOLF AI Audit on this contract.
                 </span>
               ) : (
                 "No tokens found. Paste a contract address to audit it."
