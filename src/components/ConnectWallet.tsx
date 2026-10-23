@@ -24,20 +24,18 @@ export function ConnectWallet({ compact }: { compact?: boolean }) {
         onClick={() => setOpen(true)}
         className={cx(
           "inline-flex items-center gap-2 rounded-full bg-brand font-semibold text-white shadow-sm transition hover:brightness-105",
-          compact ? "size-10 justify-center" : "h-11 px-5 text-sm",
+          compact ? "h-10 gap-1.5 px-2.5 text-[11px]" : "h-11 px-5 text-sm",
         )}
-        aria-label="Connect wallet"
       >
-        <Wallet className="size-4" />
-        {!compact && "Connect Wallet"}
+        <Wallet className={compact ? "size-3.5" : "size-4"} />
+        Connect Wallet
       </button>
       {open && (
         <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center" onClick={() => setOpen(false)}>
           <div
             role="dialog"
             aria-modal
-            aria-label="Connect wallet"
-            className="card w-full max-w-md rounded-b-none p-5 sm:rounded-2xl"
+                className="card w-full max-w-md rounded-b-none p-5 sm:rounded-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-4 flex items-center justify-between">

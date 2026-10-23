@@ -49,7 +49,7 @@ export function SearchBox({ autoFocus, onDone, className }: { autoFocus?: boolea
         onFocus={() => setOpen(true)}
         onBlur={() => setTimeout(() => setOpen(false), 150)}
         placeholder="Search token, symbol or contract address…"
-        className="h-11 w-full rounded-full border border-line bg-surface pr-10 pl-11 text-sm outline-none placeholder:text-muted focus:border-brand"
+        className="h-11 w-full rounded-full border border-line bg-surface pr-10 pl-11 text-[13px] sm:text-sm outline-none placeholder:text-muted focus:border-brand"
         aria-label="Search tokens"
       />
       {q && (

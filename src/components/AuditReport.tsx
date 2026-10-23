@@ -179,7 +179,7 @@ export function AuditReport({ token, compact }: { token: Token; compact?: boolea
               </div>
             )}
             <div className="flex flex-1 items-center gap-4">
-              <div className="rounded-full bg-surface p-1.5">
+              <div className="rounded-full bg-surface p-1.5 text-ink">
                 <ScoreRing score={a.overall} size={92} stroke={8} label="WOLF AI Audit Score" />
               </div>
               <div>

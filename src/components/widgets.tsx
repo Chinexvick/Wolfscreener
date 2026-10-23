@@ -1,6 +1,6 @@
 "use client";
 
-import { Activity, BadgeCheck, Bell, Brain, Flame, Layers, Megaphone, ShieldCheck, Sparkles, TrendingUp, Zap } from "lucide-react";
+import { BadgeCheck, BarChart3, ChevronRight, Bell, Brain, Flame, Layers, Megaphone, ShieldCheck, Sparkles, TrendingUp, Zap } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { alertMeta, chainById, feed, narratives, projects, tokenById, tokens, type FeedAlert } from "@/lib/data";
@@ -30,7 +30,15 @@ export function MarketOverview() {
 
   return (
     <Card>
-      <CardHeader icon={<Activity className="size-4 text-accent" />} title={`${name} Market Overview`} />
+      <div className="flex items-center justify-between px-4 pt-4 pb-3">
+        <h2 className="flex items-center gap-2 font-display text-[15px] font-bold">
+          <BarChart3 className="size-4 text-brand" />
+          {`${name} Market Overview`}
+        </h2>
+        <Link href="/radar" aria-label="Open radar" className="text-muted hover:text-ink">
+          <ChevronRight className="size-4" />
+        </Link>
+      </div>
       <div className="grid grid-cols-3 gap-2 px-4">
         <div>
           <div className="text-[11px] text-muted">Total Mkt Cap</div>

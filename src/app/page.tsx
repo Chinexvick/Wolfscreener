@@ -14,7 +14,7 @@ import {
   TopGainers,
   VerifiedProjects,
 } from "@/components/widgets";
-import { brand } from "@/lib/brand";
+import { AuditHero } from "@/components/AuditHero";
 
 const quick = [
   { href: "/screener", label: "Top Gainers", icon: TrendingUp, primary: true },
@@ -25,44 +25,25 @@ const quick = [
   { href: "/radar", label: "Radar", icon: Zap },
 ];
 
-function Hero() {
+function QuickActions() {
   return (
-    <section className="relative overflow-hidden rounded-3xl border border-line bg-[#f5f0ff] dark:bg-[#110c1a]">
-      <img
-        src={brand.hero}
-        alt=""
-        className="absolute inset-0 h-full w-full object-cover object-[78%_center] opacity-95 dark:opacity-70"
-      />
-      <div className="absolute inset-0 bg-gradient-to-r from-[#f5f0ff] via-[#f5f0ff]/85 to-transparent sm:via-[#f5f0ff]/70 dark:from-[#09070d] dark:via-[#09070d]/85" />
-      <div className="relative px-5 py-6 sm:px-8 sm:py-9">
-        <div className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 px-3 py-1 text-[11px] font-semibold backdrop-blur">
-          <span className="live-dot size-2 rounded-full bg-up" /> Live data · 9 chains
-        </div>
-        <h1 className="mt-3 max-w-[15ch] font-display text-[28px] leading-[1.05] font-extrabold tracking-tight sm:max-w-xl sm:text-5xl">
-          <span className="text-accent">See everything.</span>
-          <br />
-          Before everyone.
-        </h1>
-        <p className="mt-2 max-w-[30ch] text-sm text-ink/75 sm:max-w-md sm:text-base">
-          Discover, audit and track tokens with on-chain intelligence. No trading — just the truth about every token.
-        </p>
-        <div className="no-scrollbar -mx-5 mt-5 flex gap-2 overflow-x-auto px-5 sm:mx-0 sm:flex-wrap sm:px-0">
-          {quick.map(({ href, label, icon: Icon, primary }) => (
-            <Link
-              key={href}
-              href={href}
-              className={
-                primary
-                  ? "inline-flex shrink-0 items-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-sm font-bold text-white shadow-sm"
-                  : "inline-flex shrink-0 items-center gap-2 rounded-xl border border-line bg-surface/90 px-4 py-2.5 text-sm font-semibold backdrop-blur hover:border-brand/60"
-              }
-            >
-              <Icon className="size-4" /> {label}
-            </Link>
-          ))}
-        </div>
+    <div className="card p-4 sm:p-5">
+      <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:px-0">
+        {quick.map(({ href, label, icon: Icon, primary }) => (
+          <Link
+            key={href}
+            href={href}
+            className={
+              primary
+                ? "inline-flex shrink-0 items-center gap-2 rounded-xl bg-gradient-to-r from-brand to-[#6d28d9] px-4 py-2.5 text-sm font-bold text-white shadow-sm"
+                : "inline-flex shrink-0 items-center gap-2 rounded-xl border border-line bg-surface px-4 py-2.5 text-sm font-semibold hover:border-brand/60"
+            }
+          >
+            <Icon className="size-4" /> {label}
+          </Link>
+        ))}
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -78,7 +59,8 @@ export default function Home() {
     <div className="space-y-4 sm:space-y-6">
       <div className="grid grid-cols-[minmax(0,1fr)] gap-4 sm:gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <div className="min-w-0 space-y-4 sm:space-y-6">
-          <Hero />
+          <AuditHero />
+          <QuickActions />
           <TokenTable />
         </div>
         <div className="space-y-4 sm:space-y-6">

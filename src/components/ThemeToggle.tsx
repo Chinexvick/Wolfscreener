@@ -4,7 +4,7 @@ import { Moon, Sun } from "lucide-react";
 
 export const themeScript = `(function(){try{var t=localStorage.getItem("wolf-theme");if(!t){t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.dataset.theme=t}catch(e){}})()`;
 
-export function ThemeToggle() {
+export function ThemeToggle({ small }: { small?: boolean }) {
   const toggle = () => {
     const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
     document.documentElement.dataset.theme = next;
@@ -17,7 +17,7 @@ export function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-label="Toggle theme"
-      className="grid size-10 place-items-center rounded-full border border-line bg-surface text-ink hover:border-brand/60"
+      className={`grid ${small ? "size-9" : "size-10"} place-items-center rounded-full border border-line bg-surface text-ink hover:border-brand/60`}
     >
       <Sun className="size-[18px] dark:hidden" />
       <Moon className="hidden size-[18px] dark:block" />

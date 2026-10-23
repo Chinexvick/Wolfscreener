@@ -24,6 +24,7 @@ export interface NavItem {
   href: string;
   label: string;
   icon: LucideIcon;
+  badge?: "New" | number;
 }
 
 export const navGroups: { title: string; items: NavItem[] }[] = [
@@ -41,7 +42,7 @@ export const navGroups: { title: string; items: NavItem[] }[] = [
   {
     title: "Intelligence",
     items: [
-      { href: "/audit", label: "AI Audit", icon: ShieldCheck },
+      { href: "/audit", label: "AI Audit", icon: ShieldCheck, badge: "New" },
       { href: "/whales", label: "Whales", icon: Fish },
       { href: "/smart-money", label: "Smart Money", icon: Brain },
       { href: "/wallet", label: "Wallet Intel", icon: Wallet },
@@ -52,7 +53,7 @@ export const navGroups: { title: string; items: NavItem[] }[] = [
     title: "You",
     items: [
       { href: "/watchlist", label: "Watchlist", icon: Star },
-      { href: "/alerts", label: "Alerts", icon: Bell },
+      { href: "/alerts", label: "Alerts", icon: Bell, badge: 3 },
       { href: "/brief", label: "Daily Brief", icon: Newspaper },
       { href: "/rewards", label: "Rewards & Quests", icon: Trophy },
     ],
@@ -61,7 +62,7 @@ export const navGroups: { title: string; items: NavItem[] }[] = [
     title: "Projects",
     items: [
       { href: "/projects", label: "Projects", icon: Flame },
-      { href: "/boost", label: "WOLF Boost", icon: Megaphone },
+      { href: "/boost", label: "WOLF Boost", icon: Megaphone, badge: "New" },
       { href: "/developer", label: "Developer Hub", icon: LayoutDashboard },
     ],
   },
@@ -70,8 +71,8 @@ export const navGroups: { title: string; items: NavItem[] }[] = [
 export const mobileTabs: NavItem[] = [
   { href: "/", label: "Home", icon: House },
   { href: "/screener", label: "Screener", icon: ScanSearch },
-  { href: "/audit", label: "AI Audit", icon: ShieldCheck },
-  { href: "/whales", label: "Whales", icon: Fish },
+  { href: "/watchlist", label: "Watchlist", icon: Star },
+  { href: "/alerts", label: "Alerts", icon: Bell },
 ];
 
 export function isActive(pathname: string, href: string) {
