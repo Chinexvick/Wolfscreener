@@ -9,10 +9,9 @@ export default function SmartMoneyPage() {
   return (
     <>
       <PageHeader
-        sample="Wallet labels need a labeling provider such as Arkham or Nansen. These wallets are examples."
         icon={<Brain className="size-7 text-accent" />}
         title="WOLF Smart Money"
-        subtitle="Follow notable wallets: what they buy, sell and hold, with P&L where calculable. Wallet intelligence — not copy trading."
+        subtitle="Wallets making the biggest trades on live pools right now. Wallet intelligence — not copy trading. Named labels need a labeling provider."
       />
       <SmartMoneyClient />
     </>

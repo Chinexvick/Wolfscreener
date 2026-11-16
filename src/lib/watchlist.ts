@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useSyncExternalStore } from "react";
+import { track } from "./activity";
 
 const KEY = "wolf-watchlist";
 const listeners = new Set<() => void>();
@@ -32,6 +33,7 @@ export function useWatchlist() {
       cache = JSON.stringify(next);
     }
     listeners.forEach((l) => l());
+    if (!cur.includes(id)) track("watch", id);
   }, []);
   return { ids, has: (id: string) => ids.includes(id), toggle };
 }

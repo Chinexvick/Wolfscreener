@@ -64,6 +64,7 @@ export interface Token {
   /** Set on tokens that come from live public APIs (absent on demo tokens). */
   live?: boolean;
   image?: string;
+  decimals?: number;
   pool?: string;
   dex?: string;
   /** Unique-trader change, 1h vs the 24h hourly average (live tokens). */

@@ -8,6 +8,7 @@ import { age, num, pct, usd } from "@/lib/format";
 import { clampedWeighted, median } from "@/lib/stats";
 import { useFeed, useNewPairs, useTokenList } from "@/lib/live/client";
 import { useChain } from "./Shell";
+import { GlobalStatsRow, useCategories } from "./cg";
 import { DataBadge } from "./TokenTable";
 import { Card, CardHeader, Change, ChainDot, LpBadge, PromotedTag, ScoreRing, TokenAvatar, VerifiedBadge, cx } from "./ui";
 
@@ -40,7 +41,6 @@ export function MarketOverview() {
   const { tokens, status, updated } = useScoped();
   const name = chain === "all" ? "All Chains" : chainById[chain].name;
   const totalVol = tokens.reduce((a, t) => a + t.volume24h, 0);
-  const totalMcap = tokens.reduce((a, t) => a + t.mcap, 0);
   const weighted = clampedWeighted(tokens.filter((t) => t.liquidity >= 25_000).map((t) => ({ value: t.change24h, weight: t.volume24h })));
   const byChain = chains
     .map((c) => ({ c, vol: tokens.filter((t) => t.chain === c.id).reduce((a, t) => a + t.volume24h, 0) }))
@@ -61,20 +61,11 @@ export function MarketOverview() {
         <Skeleton rows={4} />
       ) : (
         <>
-          <div className="grid grid-cols-3 gap-2 px-4">
-            <div>
-              <div className="text-[11px] text-muted">Tracked Mkt Cap</div>
-              <div className="tabular font-display text-lg font-bold">{usd(totalMcap)}</div>
-            </div>
-            <div>
-              <div className="text-[11px] text-muted">24h Volume</div>
-              <div className="tabular font-display text-lg font-bold">{usd(totalVol)}</div>
-              <Change value={weighted} className="text-xs" />
-            </div>
-            <div>
-              <div className="text-[11px] text-muted">Active Pools</div>
-              <div className="tabular font-display text-lg font-bold">{num(tokens.length)}</div>
-            </div>
+          <GlobalStatsRow />
+          <div className="mt-3 grid grid-cols-3 gap-2 px-4 text-xs">
+            <div><div className="text-muted">Tracked pools</div><b className="tabular text-sm">{num(tokens.length)}</b></div>
+            <div><div className="text-muted">Pool volume</div><b className="tabular text-sm">{usd(totalVol)}</b></div>
+            <div><div className="text-muted">Pool 24h</div><Change value={weighted} className="text-sm" /></div>
           </div>
           <div className="mt-4 px-4 pb-4">
             <div className="mb-2 text-[11px] font-semibold text-muted uppercase">Volume by chain</div>
@@ -89,7 +80,7 @@ export function MarketOverview() {
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-[10px] text-muted">Totals cover the trending pools tracked by WOLF, not the whole market.</p>
+            <p className="mt-3 text-[10px] text-muted">Global figures from CoinGecko. Pool figures cover the on-chain pools WOLF tracks.</p>
           </div>
         </>
       )}
@@ -279,25 +270,28 @@ export function AiInsights() {
 }
 
 export function NarrativeMini() {
+  const cats = useCategories();
   const { tokens, status } = useScoped();
-  const rows = narratives
+  const real = (cats.data ?? []).slice(0, 8);
+  const poolRows = narratives
     .map((n) => {
       const ts = tokens.filter((t) => t.narrative === n && t.liquidity >= 25_000);
       return { n, change: median(ts.map((t) => t.change24h)), count: ts.length };
     })
     .filter((r) => r.count > 0)
     .sort((a, b) => b.change - a.change);
+  const rows = real.length ? real.map((c) => ({ n: c.name.replace(/\s*\(.*\)/, ""), change: c.change24h })) : poolRows;
   const max = Math.max(1, ...rows.map((r) => Math.abs(r.change)));
   return (
     <Card>
       <CardHeader icon={<Layers className="size-4 text-accent" />} title="Narrative Radar" action="Explore" href="/narratives" />
-      {status === "loading" ? (
+      {cats.loading && status === "loading" ? (
         <Skeleton rows={6} />
       ) : (
         <ul className="space-y-2.5 px-4 pb-2">
           {rows.map((r) => (
             <li key={r.n} className="flex items-center gap-3 text-sm">
-              <span className="w-14 font-semibold">{r.n}</span>
+              <span className="w-24 shrink-0 truncate font-semibold">{r.n}</span>
               <div className="h-2 flex-1 overflow-hidden rounded-full bg-surface-3">
                 <div className={cx("h-full rounded-full", r.change >= 0 ? "bg-up" : "bg-down")} style={{ width: `${(Math.abs(r.change) / max) * 100}%` }} />
               </div>
@@ -306,7 +300,7 @@ export function NarrativeMini() {
           ))}
         </ul>
       )}
-      <p className="px-4 pb-4 text-[10px] text-muted">Sectors are inferred from token names. Medians use pools above $25K liquidity.</p>
+      <p className="px-4 pb-4 text-[10px] text-muted">{real.length ? "Sector market-cap change over 24h, from CoinGecko categories." : "Sectors are inferred from token names. Medians use pools above $25K liquidity."}</p>
     </Card>
   );
 }

@@ -1,5 +1,6 @@
 import { Brain, Fish, GraduationCap, Radar, ShieldCheck, Sparkles, TrendingUp, Zap } from "lucide-react";
 import Link from "next/link";
+import { CgTrending } from "@/components/cg";
 import { TokenTable } from "@/components/TokenTable";
 import {
   AiInsights,
@@ -8,7 +9,6 @@ import {
   MarketOverview,
   NarrativeMini,
   NewPairsMini,
-  PromotedProjects,
   RecentlyAudited,
   TopGainers,
   VerifiedProjects,
@@ -74,7 +74,7 @@ export default function Home() {
         <AlertFeed />
         <div className="space-y-4 sm:space-y-6 md:col-span-2 xl:col-span-1">
           <BreakoutRadar />
-          <PromotedProjects />
+          <CgTrending />
         </div>
         <NarrativeMini />
         <RecentlyAudited />

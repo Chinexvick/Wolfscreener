@@ -88,3 +88,29 @@ export function useFeed(): { feed: FeedAlert[]; loading: boolean; status: Status
     updated: m.updated,
   };
 }
+
+/** Generic fetch-and-refresh hook for the small JSON API routes. */
+export function useApi<T>(url: string, refreshMs = 120_000): { data: T | null; loading: boolean; unavailable: boolean; updated: number | null } {
+  const [state, setState] = useState<{ data: T | null; loading: boolean; unavailable: boolean; updated: number | null }>({ data: null, loading: true, unavailable: false, updated: null });
+  useEffect(() => {
+    let alive = true;
+    const run = async () => {
+      try {
+        const r = await fetch(url);
+        const d = (await r.json()) as { data?: T | null; unavailable?: boolean };
+        if (!alive) return;
+        if (d.data) setState({ data: d.data, loading: false, unavailable: false, updated: Date.now() });
+        else setState((s) => ({ ...s, loading: false, unavailable: !s.data }));
+      } catch {
+        if (alive) setState((s) => ({ ...s, loading: false, unavailable: !s.data }));
+      }
+    };
+    run();
+    const id = setInterval(run, refreshMs);
+    return () => {
+      alive = false;
+      clearInterval(id);
+    };
+  }, [url, refreshMs]);
+  return state;
+}

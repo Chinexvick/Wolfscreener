@@ -1,6 +1,9 @@
 "use client";
+import { useChain } from "@/components/Shell";
 
 import Link from "next/link";
+import { useEffect } from "react";
+import { track } from "@/lib/activity";
 import { DataBadge } from "@/components/TokenTable";
 import { Card, CardHeader, Change, TokenAvatar } from "@/components/ui";
 import { AlertRow } from "@/components/widgets";
@@ -9,7 +12,10 @@ import { useFeed, useTokenList } from "@/lib/live/client";
 import { useWatchlist } from "@/lib/watchlist";
 
 export function BriefClient() {
-  const m = useTokenList();
+  useEffect(() => track("brief", new Date().toDateString()), []);
+  const m0 = useTokenList();
+  const { chain } = useChain();
+  const m = { ...m0, tokens: m0.tokens.filter((t) => chain === "all" || t.chain === chain) };
   const { feed } = useFeed();
   const { ids } = useWatchlist();
   if (m.status === "loading") return <div className="card h-64 animate-pulse" />;

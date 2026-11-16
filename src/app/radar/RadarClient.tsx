@@ -1,4 +1,5 @@
 "use client";
+import { useChain } from "@/components/Shell";
 
 import { Activity, Clock, Droplets, Gauge, Receipt, ShoppingCart, TrendingUp, Users } from "lucide-react";
 import Link from "next/link";
@@ -22,7 +23,8 @@ const signals: { title: string; icon: typeof Activity; metric: (t: Token) => num
 
 export function RadarClient() {
   const m = useTokenList();
-  const liquid = m.tokens.filter((t) => t.liquidity >= 25_000);
+  const { chain } = useChain();
+  const liquid = m.tokens.filter((t) => t.liquidity >= 25_000 && (chain === "all" || t.chain === chain));
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-4 sm:gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
       <div className="space-y-3">

@@ -4,6 +4,7 @@ import { Bell, ChevronDown, ChevronRight, Ellipsis, Menu, TrendingUp, X } from "
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { AlertEngine, useAlertEvents } from "@/lib/alerts";
 import { brand } from "@/lib/brand";
 import { chains, type ChainId } from "@/lib/data";
 import { ConnectWallet } from "./ConnectWallet";
@@ -56,17 +57,21 @@ function ChainSelect() {
   );
 }
 
-function BellLink({ count }: { count?: number }) {
+function BellLink() {
+  const { unseen: count } = useAlertEvents();
   return (
     <Link href="/alerts" aria-label="Alerts" className="relative grid size-10 place-items-center rounded-full border border-line bg-surface">
       <Bell className="size-[18px]" />
       {count ? (
         <span className="absolute -top-1 -right-1 grid size-4 place-items-center rounded-full bg-down text-[9px] font-bold text-white">{count}</span>
-      ) : (
-        <span className="absolute -top-0.5 -right-0.5 size-3 rounded-full border-2 border-surface bg-down" />
-      )}
+      ) : null}
     </Link>
   );
+}
+
+function AlertsBadge() {
+  const { unseen } = useAlertEvents();
+  return unseen ? <span className="ml-auto grid size-5 place-items-center rounded-full bg-down text-[10px] font-bold text-white">{unseen > 9 ? "9+" : unseen}</span> : null;
 }
 
 function NavBadge({ badge, active }: { badge: "New" | number; active: boolean }) {
@@ -103,6 +108,7 @@ function SideNav({ onNavigate }: { onNavigate?: () => void }) {
                     <Icon className="size-[18px]" />
                     {label}
                     {badge !== undefined && <NavBadge badge={badge} active={active} />}
+                    {href === "/alerts" && <AlertsBadge />}
                   </Link>
                 </li>
               );
@@ -167,7 +173,7 @@ export function Shell({ children }: { children: ReactNode }) {
             <div className="ml-auto flex items-center gap-2">
               <ChainSelect />
               <ThemeToggle />
-              <BellLink count={5} />
+              <BellLink />
               <ConnectWallet />
             </div>
           </div>
@@ -197,6 +203,7 @@ export function Shell({ children }: { children: ReactNode }) {
           </div>
         </header>
 
+        <AlertEngine />
         <main className="mx-auto w-full max-w-[1500px] px-4 pt-4 pb-28 sm:pt-6 lg:px-6 lg:pb-10">{children}</main>
 
         <footer className="hidden border-t border-line px-6 py-6 text-xs text-muted lg:block">

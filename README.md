@@ -71,6 +71,8 @@ The app runs on free, key-free public APIs by default (`src/lib/live/`):
 | Source | Used for |
 | --- | --- |
 | [GeckoTerminal](https://www.geckoterminal.com/dex-api) | Trending and new pools on 9 chains, prices, market cap, FDV, volume, buy/sell counts, token logos, hourly candles, recent trades, project info |
+| [CoinGecko](https://www.coingecko.com/en/api) | Global market stats, sector categories, trending coins, project listings, native-coin prices. Works key-free; set `COINGECKO_API_KEY` (free demo key) for higher limits |
+| [DexScreener](https://dexscreener.com) | Logo fallback for tokens GeckoTerminal has no image for |
 | [GoPlus Security](https://gopluslabs.io) | Contract flags, honeypot simulation, buy/sell tax, mint and owner permissions, LP lock status, top holders, deployer (EVM chains and Solana) |
 
 How it fits together:
@@ -83,7 +85,9 @@ How it fits together:
 
 Public limits are strict (GeckoTerminal allows about 30 requests a minute), which is why responses are cached. Paid keys lift this: copy `.env.example` to `.env.local` and set `WOLF_DATA_MODE`.
 
-Still sample data, because no free public API covers them: smart-money wallet labels, wallet portfolios, social metrics, saved audit history, accounts, rewards and project profiles. These pages carry a **SAMPLE DATA** note.
+Working on this device, with no account: wallet connect (read-only, EVM and Solana browsers wallets), watchlist, alert rules checked against live data every minute with an in-app toast, bell badge and optional browser notification, share to X or Telegram, saved wallets, rewards and XP from real actions.
+
+Still sample data, because they need accounts or paid providers: the admin console, named wallet labels, social metrics and email/Telegram delivery. These are labeled in the UI.
 
 Testnets: market-data APIs do not index testnet tokens, so tokens on Sepolia or BSC testnet will not be found by search or audit. Mainnet data is used for the test environment.
 

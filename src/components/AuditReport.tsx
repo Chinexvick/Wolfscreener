@@ -1,5 +1,6 @@
 "use client";
 
+import { monitorToken, unmonitorToken, useMonitoring } from "@/lib/alerts";
 import {
   ArrowDown,
   Bell,
@@ -151,7 +152,7 @@ function WalletGraph({ a }: { a: Audit }) {
 export function AuditReport({ token, compact, audit, whales }: { token: Token; compact?: boolean; audit?: Audit; whales?: React.ReactNode }) {
   const a = audit ?? buildAudit(token);
   const live = a.live;
-  const [monitoring, setMonitoring] = useState(false);
+  const monitoring = useMonitoring(token.id);
   const tokenAlerts = feed.filter((f) => f.tokenId === token.id || f.kind === "whale").slice(0, 3);
   const prev = a.history[a.history.length - 2] ?? a.history[0];
 
@@ -199,7 +200,7 @@ export function AuditReport({ token, compact, audit, whales }: { token: Token; c
             <div className="flex flex-wrap gap-2 sm:flex-col">
               <button
                 type="button"
-                onClick={() => setMonitoring((m) => !m)}
+                onClick={() => (monitoring ? unmonitorToken(token.id) : monitorToken(token))}
                 className={cx("inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold", monitoring ? "bg-white text-accent" : "bg-brand text-white")}
               >
                 <Bell className="size-4" /> {monitoring ? "Monitoring on" : "Monitor token"}

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { JetBrains_Mono, Plus_Jakarta_Sans, Sora } from "next/font/google";
 import { Shell } from "@/components/Shell";
+import { WalletProvider } from "@/lib/wallet";
 import { themeScript } from "@/components/ThemeToggle";
 import { brand } from "@/lib/brand";
 import "./globals.css";
@@ -31,7 +32,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body>
-        <Shell>{children}</Shell>
+        <WalletProvider>
+          <Shell>{children}</Shell>
+        </WalletProvider>
       </body>
     </html>
   );

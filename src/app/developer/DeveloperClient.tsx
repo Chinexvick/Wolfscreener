@@ -1,56 +1,85 @@
 "use client";
 
-import { BadgeCheck, Send, Sparkles } from "lucide-react";
+import { Check, Send, Sparkles } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
-import { AreaChart, Columns } from "@/components/charts";
+import { AreaChart } from "@/components/charts";
 import { Card, CardHeader, Chip, Stat, TokenAvatar, cx } from "@/components/ui";
-import { buildAudit, feed, rng, smartWallets, tokenById } from "@/lib/data";
+import { DataBadge } from "@/components/TokenTable";
+import type { Token } from "@/lib/data";
 import { num, pct, usd } from "@/lib/format";
+import { useTokenList, useWhales } from "@/lib/live/client";
+import { useLocal } from "@/lib/local";
 
-const sections = ["Dashboard", "Promotion analytics", "Growth center", "AI assistant", "Verification"] as const;
+const sections = ["Dashboard", "Growth center", "AI assistant", "Verification"] as const;
 
 const questions = [
-  "Why did our volume fall?",
-  "Which wallets accumulated our token?",
-  "Which large holders sold?",
-  "How did our holder count change?",
+  "Why did volume move?",
+  "Which large wallets traded it?",
   "What happened to liquidity?",
-  "Summarize our token activity this week.",
+  "How risky does the contract look?",
+  "Summarize this token's activity.",
 ];
 
+const growth = [
+  ["Project profile", "Logo, description, website, socials, whitepaper, team, roadmap, tokenomics and contracts."],
+  ["Announcements", "Post updates to your followers and token page."],
+  ["Campaigns & quests", "Create educational, holder and community quests."],
+  ["Airdrops", "Run holder campaigns with anti-bot eligibility checks."],
+  ["Community links", "Telegram, X and Discord — verified once connected."],
+  ["Promotions", "WOLF Boost placements. Paid placements never change audit or risk scores."],
+];
+
+const badges = ["Contract Verified", "Project Information Verified", "Social Accounts Verified", "Team Identity Verified", "Official Contract Verified"];
+
 export function DeveloperClient() {
-  const t = tokenById("nexa")!;
-  const audit = buildAudit(t);
+  const market = useTokenList();
+  const { moves } = useWhales();
+  const list = [...market.tokens].sort((a, b) => b.liquidity - a.liquidity).slice(0, 80);
+  const [pick, setPick] = useState("");
+  const t: Token | undefined = list.find((x) => x.id === pick) ?? list[0];
   const [tab, setTab] = useState<(typeof sections)[number]>("Dashboard");
   const [chat, setChat] = useState<{ q: string; a: string }[]>([]);
   const [input, setInput] = useState("");
-  const r = rng(321);
-  const holdersSeries = Array.from({ length: 30 }, (_, i) => t.holders * (0.7 + i * 0.01 + r() * 0.02));
-  const weekly = Array.from({ length: 7 }, () => ({ a: 20 + r() * 80, b: 10 + r() * 60 }));
+  const [applied, setApplied] = useLocal<string[]>("wolf-dev-applied", []);
+  const [notes, setNotes] = useLocal<Record<string, string>>("wolf-dev-notes", {});
+
+  if (!t) return <div className="card h-64 animate-pulse" />;
+
+  const mine = moves.filter((m) => m.token.id === t.id);
 
   const answer = (q: string) => {
     const s = q.toLowerCase();
-    const w = smartWallets.slice(0, 3).map((x) => x.label).join(", ");
-    let a = `Over the last 7 days ${t.symbol} had ${num(t.txns24h * 7)} transactions, holders changed ${pct(t.holderGrowth, 1)} and liquidity changed ${pct(t.liquidityChange, 1)}. Audit score is ${audit.overall}/100.`;
-    if (s.includes("volume")) a = `24h volume is ${usd(t.volume24h)} (${pct(t.volumeChange, 0)} vs 7d average). The decline is concentrated in 3 wallets that previously drove 41% of volume; organic buyer count is stable.`;
-    else if (s.includes("accumulat")) a = `Top accumulating wallets this week: ${w}. Combined they added ~${usd(t.volume24h * 0.08)}.`;
-    else if (s.includes("sold") || s.includes("sell")) a = `Two holders above 0.5% of supply reduced positions: one sent 1.2% to an exchange-associated wallet (INFERRED), one distributed to 14 wallets.`;
-    else if (s.includes("holder")) a = `Holder count is ${num(t.holders)}, ${pct(t.holderGrowth, 1)} this week. New holders mostly arrived after your quest campaign launch.`;
-    else if (s.includes("liquidity")) a = `Liquidity is ${usd(t.liquidity)} (${pct(t.liquidityChange, 1)}). LP is ${t.lp}; ${audit.lp.events.at(-1)?.label} of ${usd(audit.lp.events.at(-1)?.amount ?? 0)} ${audit.lp.events.at(-1)?.when}.`;
+    let a = `${t.name} ($${t.symbol}) trades at ${t.price < 1 ? `$${t.price.toPrecision(3)}` : usd(t.price)}, ${pct(t.change24h, 1)} in 24h, with ${usd(t.volume24h)} volume and ${usd(t.liquidity)} liquidity. Audit score: ${t.auditScore}/100.`;
+    if (s.includes("volume")) a = `24h volume is ${usd(t.volume24h)}. The last hour runs ${pct(t.volumeChange, 0)} versus its 24h hourly average, across ${num(t.txns24h)} transactions (${num(t.buys)} buys, ${num(t.sells)} sells).`;
+    else if (s.includes("wallet") || s.includes("large")) {
+      const top = [...mine].sort((x, y) => y.trade.usd - x.trade.usd).slice(0, 3);
+      a = top.length ? `Largest recent trades: ${top.map((m) => `${m.trade.kind === "buy" ? "bought" : "sold"} ${usd(m.trade.usd)}`).join(", ")}.` : "No large trades on this token in the latest sample of high-volume pools.";
+    } else if (s.includes("liquidity")) a = `Liquidity is ${usd(t.liquidity)} (${pct(t.liquidityChange, 1)} versus the 24h level). LP status: ${t.lp}.`;
+    else if (s.includes("risk") || s.includes("contract"))
+      a = t.scanned
+        ? `Contract scan found ${t.contractFlags ?? 0} risky flag(s). Buy tax ${t.buyTax}%, sell tax ${t.sellTax}%. Top-10 holders (excluding LP/burn): ${t.top10Pct ?? "n/a"}%. Overall audit ${t.auditScore}/100.`
+        : "This chain is not covered by the contract scanner yet, so only market-based checks apply.";
     setChat((c) => [...c, { q, a }]);
     setInput("");
   };
 
   return (
     <div className="space-y-4 sm:space-y-5">
-      <Card className="flex items-center gap-3 p-4">
+      <Card className="flex flex-wrap items-center gap-3 p-4">
         <TokenAvatar token={t} size={44} />
-        <div className="flex-1">
-          <div className="flex items-center gap-1.5 font-display font-bold">
-            {t.name} <BadgeCheck className="size-4 text-accent" />
-          </div>
-          <div className="text-xs text-muted">Managing ${t.symbol} · Project owner</div>
+        <div className="min-w-0 flex-1">
+          <div className="truncate font-display font-bold">{t.name}</div>
+          <div className="text-xs text-muted">Analyzing ${t.symbol} with live data</div>
         </div>
+        <select aria-label="Token" value={t.id} onChange={(e) => setPick(e.target.value)} className="h-10 rounded-xl border border-line bg-surface-2 px-3 text-sm">
+          {list.map((x) => (
+            <option key={x.id} value={x.id}>
+              ${x.symbol}
+            </option>
+          ))}
+        </select>
+        <DataBadge status={market.status} updated={market.updated} />
       </Card>
 
       <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 lg:mx-0 lg:px-0">
@@ -64,91 +93,57 @@ export function DeveloperClient() {
       {tab === "Dashboard" && (
         <div className="grid grid-cols-[minmax(0,1fr)] gap-4 sm:gap-5 lg:grid-cols-3">
           <Card className="grid grid-cols-2 gap-4 p-4 sm:grid-cols-4 lg:col-span-3">
-            <Stat label="Holders" value={num(t.holders)} sub={pct(t.holderGrowth, 1)} tone="up" />
-            <Stat label="24h Volume" value={usd(t.volume24h)} />
-            <Stat label="Liquidity" value={usd(t.liquidity)} />
+            <Stat label="24h Volume" value={usd(t.volume24h)} sub={pct(t.volumeChange, 0)} tone={t.volumeChange >= 0 ? "up" : "down"} />
+            <Stat label="Liquidity" value={usd(t.liquidity)} sub={pct(t.liquidityChange, 1)} tone={t.liquidityChange >= 0 ? "up" : "down"} />
             <Stat label="Transactions" value={num(t.txns24h)} />
-            <Stat label="Token page views" value="48.2K" sub="+22%" tone="up" />
-            <Stat label="Followers" value="12.4K" sub="+640" tone="up" />
-            <Stat label="Watchlists" value="3,912" sub="+311" tone="up" />
-            <Stat label="Alert subscribers" value="1,284" sub="+97" tone="up" />
+            <Stat label="Audit score" value={`${t.auditScore}/100`} />
           </Card>
           <Card className="lg:col-span-2">
-            <CardHeader title="Holder growth (30d)" />
-            <AreaChart data={holdersSeries} height={180} />
+            <CardHeader title="Price (7d)" />
+            {t.spark.length > 1 ? <AreaChart data={t.spark} height={180} color={t.change24h >= 0 ? "var(--up)" : "var(--down)"} /> : <p className="px-4 pb-4 text-sm text-muted">No price history yet.</p>}
           </Card>
           <Card>
-            <CardHeader title="Wallet activity" />
+            <CardHeader title="Large trades" />
             <div className="px-2 pb-2">
-              {feed.slice(0, 4).map((a) => (
-                <div key={a.id} className="border-t border-line px-2 py-2 text-xs first:border-t-0">
-                  <b>{a.title}</b>
-                  <div className="text-muted">{a.body.replace(/\$[A-Z]+/, `$${t.symbol}`)}</div>
+              {mine.length === 0 && <p className="px-2 pb-2 text-xs text-muted">No large trades on this token in the latest sample.</p>}
+              {mine.slice(0, 5).map((m) => (
+                <div key={m.trade.tx} className="border-t border-line px-2 py-2 text-xs first:border-t-0">
+                  <b className={m.trade.kind === "buy" ? "text-up" : "text-down"}>{m.trade.kind === "buy" ? "Buy" : "Sell"}</b> {usd(m.trade.usd)}
                 </div>
               ))}
             </div>
           </Card>
-        </div>
-      )}
-
-      {tab === "Promotion analytics" && (
-        <div className="grid grid-cols-[minmax(0,1fr)] gap-4 sm:gap-5 lg:grid-cols-3">
-          <Card className="grid grid-cols-2 gap-4 p-4 sm:grid-cols-5 lg:col-span-3">
-            <Stat label="Impressions" value="1.21M" />
-            <Stat label="Token page views" value="48.2K" />
-            <Stat label="Project page views" value="19.7K" />
-            <Stat label="Campaign clicks" value="22.9K" />
-            <Stat label="Followers gained" value="+3,140" tone="up" />
-            <Stat label="Watchlist adds" value="+1,802" tone="up" />
-            <Stat label="Alert subscriptions" value="+611" tone="up" />
-            <Stat label="Quest participants" value="4,420" />
-            <Stat label="Community growth" value="+9.4%" tone="up" />
-            <Stat label="Click → follow" value="13.7%" />
-          </Card>
-          <Card className="lg:col-span-2">
-            <CardHeader title="Clicks (green) vs follows (red) — last 7 days" />
-            <div className="px-4 pb-4">
-              <Columns data={weekly} height={150} labels={["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]} />
-            </div>
-          </Card>
-          <Card className="p-4 text-sm">
-            <div className="font-display font-bold">Active campaign</div>
-            <p className="mt-1 text-muted">PRO package · Homepage banner + trending sponsorship · 4 days left</p>
-            <p className="mt-3 rounded-xl bg-surface-2 p-3 text-xs">
-              Reminder: your audit score ({audit.overall}/100) and risk data are unaffected by promotion. Placements are labeled PROMOTED.
-            </p>
-          </Card>
+          <p className="text-xs text-muted lg:col-span-3">
+            Followers, page views and campaign analytics need accounts and a database. See <Link href="/boost" className="font-semibold text-accent">WOLF Boost</Link> for what will be measured.
+          </p>
         </div>
       )}
 
       {tab === "Growth center" && (
         <div className="grid grid-cols-[minmax(0,1fr)] gap-4 sm:gap-5 md:grid-cols-2">
-          {[
-            ["Project profile", "Logo, description, website, socials, whitepaper, team, roadmap, tokenomics, contracts, exchanges, partnerships."],
-            ["Announcements", "Post updates to your followers and token page."],
-            ["Campaigns & quests", "Create educational, holder and community quests. Fund rewards."],
-            ["Airdrops", "Run holder campaigns with anti-bot eligibility checks."],
-            ["Community links", "Telegram, X, Discord — verified when connected."],
-            ["Promotions", "Book WOLF Boost placements and track results."],
-          ].map(([title, d]) => (
-            <Card key={title} className="flex items-start justify-between gap-3 p-4">
-              <div>
-                <div className="font-display font-bold">{title}</div>
-                <p className="text-sm text-muted">{d}</p>
-              </div>
-              <button type="button" className="shrink-0 rounded-lg border border-line px-3 py-1.5 text-xs font-semibold">
-                Manage
-              </button>
+          {growth.map(([title, d]) => (
+            <Card key={title} className="space-y-2 p-4">
+              <div className="font-display font-bold">{title}</div>
+              <p className="text-sm text-muted">{d}</p>
+              <textarea
+                aria-label={`${title} draft`}
+                value={notes[`${t.id}:${title}`] ?? ""}
+                onChange={(e) => setNotes((n) => ({ ...n, [`${t.id}:${title}`]: e.target.value }))}
+                placeholder="Draft saved on this device"
+                rows={2}
+                className="w-full resize-none rounded-xl border border-line bg-surface-2 p-2.5 text-sm outline-none focus:border-brand"
+              />
             </Card>
           ))}
+          <p className="text-xs text-muted md:col-span-2">Drafts are stored in this browser. Publishing to followers needs project accounts, which are not part of this test build.</p>
         </div>
       )}
 
       {tab === "AI assistant" && (
         <Card className="flex min-h-[420px] flex-col">
-          <CardHeader icon={<Sparkles className="size-4 text-brand" />} title="WOLF AI Project Assistant" />
+          <CardHeader icon={<Sparkles className="size-4 text-brand" />} title="WOLF Project Assistant" />
           <div className="flex-1 space-y-3 px-4">
-            {chat.length === 0 && <p className="text-sm text-muted">Ask about your token. Answers use available platform and on-chain data.</p>}
+            {chat.length === 0 && <p className="text-sm text-muted">Pick a question. Answers are generated from the live numbers above, not from a language model.</p>}
             {chat.map((m, i) => (
               <div key={i} className="space-y-2">
                 <div className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-brand px-3 py-2 text-sm text-white">{m.q}</div>
@@ -170,7 +165,7 @@ export function DeveloperClient() {
             }}
             className="flex gap-2 p-4"
           >
-            <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask anything about your token…" className="h-11 flex-1 rounded-xl border border-line bg-surface-2 px-3 text-sm outline-none focus:border-brand" />
+            <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask about volume, liquidity, risk or wallets…" className="h-11 flex-1 rounded-xl border border-line bg-surface-2 px-3 text-sm outline-none focus:border-brand" />
             <button type="submit" aria-label="Send" className="grid size-11 place-items-center rounded-xl bg-brand text-white">
               <Send className="size-4" />
             </button>
@@ -181,20 +176,24 @@ export function DeveloperClient() {
       {tab === "Verification" && (
         <Card className="p-4 sm:p-5">
           <h2 className="font-display text-lg font-bold">Apply for WOLF Verified</h2>
-          <p className="text-sm text-muted">Each badge states exactly what was verified. Verification never means WOLF guarantees the project or token.</p>
+          <p className="text-sm text-muted">Each badge states exactly what was verified. Verification never means WOLF guarantees the project or token. Applications are saved on this device until review accounts exist.</p>
           <ul className="mt-4 space-y-2">
-            {[
-              ["Contract Verified", true],
-              ["Project Information Verified", true],
-              ["Social Accounts Verified", true],
-              ["Team Identity Verified", false],
-              ["Official Contract Verified", true],
-            ].map(([l, done]) => (
-              <li key={l as string} className="flex items-center justify-between rounded-xl border border-line px-3 py-2.5 text-sm">
-                <span className="font-semibold">{l}</span>
-                <span className={cx("rounded-full px-2.5 py-0.5 text-xs font-bold", done ? "bg-up-soft text-up" : "bg-brand text-white")}>{done ? "Verified" : "Apply"}</span>
-              </li>
-            ))}
+            {badges.map((l) => {
+              const key = `${t.id}:${l}`;
+              const on = applied.includes(key);
+              return (
+                <li key={l} className="flex items-center justify-between gap-3 rounded-xl border border-line px-3 py-2.5 text-sm">
+                  <span className="font-semibold">{l}</span>
+                  <button
+                    type="button"
+                    onClick={() => setApplied((a) => (a.includes(key) ? a.filter((x) => x !== key) : [...a, key]))}
+                    className={cx("inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold", on ? "bg-up-soft text-up" : "bg-brand text-white")}
+                  >
+                    {on && <Check className="size-3" />} {on ? "Applied" : "Apply"}
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </Card>
       )}

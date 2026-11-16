@@ -3,6 +3,7 @@ import { chains, tokens as demoTokens, type ChainId, type Token } from "@/lib/da
 import { DATA_MODE, isEvm, parseTokenKey, tokenKey } from "./config";
 import { UpstreamError, fetchOhlcv, fetchPoolsStrict, fetchTokenInfo, fetchTokenPool, fetchTrades, type Candle, type Trade, type TokenInfo } from "./gecko";
 import { applySecurity } from "./score";
+import { fetchDexLogos } from "./logos";
 import { fetchSecurity, type Security } from "./security";
 import { getJson, mapLimit } from "./http";
 
@@ -49,6 +50,12 @@ async function chainPools(chain: ChainId, kind: "trending_pools" | "new_pools"):
   if (list === null) throw new Error(`pools unavailable: ${chain}`);
   // Some chains have no trending list: fall back to their most active pools.
   if (list.length < 5 && kind === "trending_pools") list = [...list, ...((await fetchPoolsStrict(chain, "pools")) ?? [])];
+  // Tokens with no logo on GeckoTerminal: ask DexScreener, which has logos for many newer tokens.
+  const noLogo = list.filter((t) => !t.image).map((t) => t.address);
+  if (noLogo.length) {
+    const found = await fetchDexLogos(chain, noLogo);
+    list = list.map((t) => (t.image ? t : { ...t, image: found[t.address.toLowerCase()] }));
+  }
   return list;
 }
 

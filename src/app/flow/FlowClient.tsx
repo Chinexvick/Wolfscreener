@@ -1,4 +1,5 @@
 "use client";
+import { useChain } from "@/components/Shell";
 
 import { PressureBar } from "@/components/charts";
 import { DataBadge } from "@/components/TokenTable";
@@ -10,9 +11,11 @@ import Link from "next/link";
 
 export function FlowClient() {
   const m = useTokenList();
-  const w = useWhales();
+  const w0 = useWhales();
+  const { chain } = useChain();
+  const w = { ...w0, moves: w0.moves.filter((x) => chain === "all" || x.token.chain === chain) };
   if (m.status === "loading") return <div className="card h-64 animate-pulse" />;
-  const t = m.tokens.filter((x) => x.liquidity >= 10_000);
+  const t = m.tokens.filter((x) => x.liquidity >= 10_000 && (chain === "all" || x.chain === chain));
   const buys = t.reduce((a, x) => a + x.buys, 0);
   const sells = t.reduce((a, x) => a + x.sells, 0);
   const whaleBuy = w.moves.filter((x) => x.trade.kind === "buy").reduce((a, x) => a + x.trade.usd, 0);

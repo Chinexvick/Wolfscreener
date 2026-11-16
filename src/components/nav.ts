@@ -53,7 +53,7 @@ export const navGroups: { title: string; items: NavItem[] }[] = [
     title: "You",
     items: [
       { href: "/watchlist", label: "Watchlist", icon: Star },
-      { href: "/alerts", label: "Alerts", icon: Bell, badge: 3 },
+      { href: "/alerts", label: "Alerts", icon: Bell },
       { href: "/brief", label: "Daily Brief", icon: Newspaper },
       { href: "/rewards", label: "Rewards & Quests", icon: Trophy },
     ],

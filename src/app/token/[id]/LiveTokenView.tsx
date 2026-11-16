@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { Bell, Copy, ExternalLink, Globe, Send, Share2, Star } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -13,6 +14,7 @@ import { dexscreenerUrl, explorerAddressUrl, explorerTxUrl, geckoterminalUrl } f
 import { ago } from "@/lib/live/feed";
 import { buildLiveAudit } from "@/lib/live/score";
 import type { TokenBundle } from "@/lib/live/tokens";
+import { track } from "@/lib/activity";
 import { useWatchlist } from "@/lib/watchlist";
 
 const tabs = ["Overview", "Chart", "Transactions", "Holders", "Whales", "AI Audit", "Project", "Alerts"] as const;
@@ -34,6 +36,10 @@ export function LiveTokenView({ bundle }: { bundle: TokenBundle }) {
   const current = tabs.find((x) => slug(x) === params.get("tab")) ?? "Overview";
   const setTab = (x: Tab) => router.replace(`/token/${t.id}${x === "Overview" ? "" : `?tab=${slug(x)}`}`, { scroll: false });
   const { has, toggle } = useWatchlist();
+  useEffect(() => {
+    track("token", t.id);
+    if (current === "AI Audit") track("audit", t.id);
+  }, [t.id, current]);
   const audit = useMemo(() => buildLiveAudit(t, sec), [t, sec]);
   const [range, setRange] = useState(48);
   const chain = chainById[t.chain];

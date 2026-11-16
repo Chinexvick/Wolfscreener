@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { Bell, Copy, ExternalLink, Globe, Send, Share2, Star } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -10,6 +11,7 @@ import { Card, CardHeader, Change, Chip, LpBadge, PromotedTag, RiskBadge, ScoreR
 import { AlertRow } from "@/components/widgets";
 import { buildAudit, chainById, feed, projects, rng, smartWallets, tokenById, walletLabels } from "@/lib/data";
 import { age, num, price, shortAddr, usd } from "@/lib/format";
+import { track } from "@/lib/activity";
 import { useWatchlist } from "@/lib/watchlist";
 
 const tabs = ["Overview", "Chart", "Transactions", "Holders", "Whales", "Smart Money", "AI Audit", "Social", "Project", "Alerts"] as const;
@@ -23,6 +25,10 @@ export function TokenView({ id }: { id: string }) {
   const current = tabs.find((x) => slug(x) === params.get("tab")) ?? "Overview";
   const setTab = (x: Tab) => router.replace(`/token/${id}${x === "Overview" ? "" : `?tab=${slug(x)}`}`, { scroll: false });
   const { has, toggle } = useWatchlist();
+  useEffect(() => {
+    track("token", id);
+    if (current === "AI Audit") track("audit", id);
+  }, [id, current]);
   const audit = useMemo(() => buildAudit(t), [t]);
   const [range, setRange] = useState("24H");
 

@@ -26,7 +26,7 @@ interface GtPool {
 }
 interface GtToken {
   id: string;
-  attributes: { address: string; name: string; symbol: string; image_url: string | null; coingecko_coin_id?: string | null };
+  attributes: { address: string; name: string; symbol: string; decimals?: number | null; image_url: string | null; coingecko_coin_id?: string | null };
 }
 interface GtList {
   data: GtPool[];
@@ -127,6 +127,7 @@ export function poolToToken(pool: GtPool, tokens: Map<string, GtToken>): Token |
     spark: sparkFrom(price, a.price_change_percentage),
     hue: hashString(tok.attributes.address) % 360,
     live: true,
+    decimals: typeof tok.attributes.decimals === "number" ? tok.attributes.decimals : undefined,
     image: tok.attributes.image_url && !tok.attributes.image_url.includes("missing") ? tok.attributes.image_url : undefined,
     pool: a.address,
     dex: pool.relationships.dex?.data.id,

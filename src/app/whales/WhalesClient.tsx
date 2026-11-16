@@ -1,4 +1,5 @@
 "use client";
+import { useChain } from "@/components/Shell";
 
 import { PressureBar } from "@/components/charts";
 import { DataBadge } from "@/components/TokenTable";
@@ -10,8 +11,10 @@ import { useFeed, useWhales } from "@/lib/live/client";
 
 export function WhalesClient() {
   const { feed, status, updated, loading } = useFeed();
-  const w = useWhales();
-  const moves = feed.filter((a) => a.kind === "whale");
+  const w0 = useWhales();
+  const { chain } = useChain();
+  const w = { ...w0, moves: w0.moves.filter((x) => chain === "all" || x.token.chain === chain) };
+  const moves = feed.filter((a) => a.kind === "whale" && (chain === "all" || w.moves.some((x) => x.token.id === a.tokenId)));
   const byToken = new Map<string, { token: Token; buy: number; sell: number }>();
   for (const m of w.moves) {
     const e = byToken.get(m.token.id) ?? { token: m.token, buy: 0, sell: 0 };

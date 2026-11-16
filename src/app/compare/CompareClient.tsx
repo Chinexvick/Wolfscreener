@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { track } from "@/lib/activity";
 import { LpBadge, TokenAvatar, cx } from "@/components/ui";
 import { chainById, type Token } from "@/lib/data";
 import { useTokenList } from "@/lib/live/client";
@@ -51,8 +52,8 @@ export function CompareClient() {
     <div className="card overflow-hidden">
       <div className="grid grid-cols-2 gap-3 p-4">
         {[
-          [ta, a, setA],
-          [tb, b, setB],
+          [ta, a, (v: string) => (setA(v), track("compare", `${v}:${b}`))],
+          [tb, b, (v: string) => (setB(v), track("compare", `${a}:${v}`))],
         ].map(([t, v, set], i) => (
           <div key={i} className="space-y-2">
             <div className="flex items-center gap-2">
