@@ -66,7 +66,26 @@ src/
 
 ## Data layer
 
-`src/lib/data.ts` currently serves a deterministic demo dataset so every screen is fully populated. Each builder (`tokens`, `buildAudit`, `feed`, `smartWallets`, `projects`) maps 1:1 to a future API/indexer endpoint, and `useLiveTokens` is the seam for a websocket price feed. Planned integrations: chain RPCs, block-explorer verified source, DEX pair/LP data, LP lockers, transaction simulation for sellability, and wallet-label sources.
+The app runs on free, key-free public APIs by default (`src/lib/live/`):
+
+| Source | Used for |
+| --- | --- |
+| [GeckoTerminal](https://www.geckoterminal.com/dex-api) | Trending and new pools on 9 chains, prices, market cap, FDV, volume, buy/sell counts, token logos, hourly candles, recent trades, project info |
+| [GoPlus Security](https://gopluslabs.io) | Contract flags, honeypot simulation, buy/sell tax, mint and owner permissions, LP lock status, top holders, deployer (EVM chains and Solana) |
+
+How it fits together:
+
+- `gecko.ts` and `security.ts` call the APIs and normalize the responses.
+- `score.ts` turns the raw security scan into the explainable audit score. Every category lists its evidence, and categories with no data are left out instead of guessed.
+- `tokens.ts` holds the cached server functions. Pools are cached per chain and scans per token, so a failed request is never cached and is retried on the next visit.
+- `app/api/*` exposes `tokens`, `new-pairs`, `search` and `whales` to the client hooks in `client.ts`.
+- If the public APIs are unreachable the UI falls back to the bundled sample data (`src/lib/data.ts`) and shows a **SAMPLE DATA** badge.
+
+Public limits are strict (GeckoTerminal allows about 30 requests a minute), which is why responses are cached. Paid keys lift this: copy `.env.example` to `.env.local` and set `WOLF_DATA_MODE`.
+
+Still sample data, because no free public API covers them: smart-money wallet labels, wallet portfolios, social metrics, saved audit history, accounts, rewards and project profiles. These pages carry a **SAMPLE DATA** note.
+
+Testnets: market-data APIs do not index testnet tokens, so tokens on Sepolia or BSC testnet will not be found by search or audit. Mainnet data is used for the test environment.
 
 ## Brand assets
 

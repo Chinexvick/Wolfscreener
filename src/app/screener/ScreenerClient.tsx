@@ -4,7 +4,8 @@ import { Bookmark, RotateCcw, SlidersHorizontal, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { TokenTable } from "@/components/TokenTable";
 import { cx } from "@/components/ui";
-import { tokens, type Risk, type Token } from "@/lib/data";
+import { type Risk, type Token } from "@/lib/data";
+import { useTokenList } from "@/lib/live/client";
 
 type Range = [number | "", number | ""];
 interface Filters {
@@ -17,12 +18,8 @@ interface Filters {
   ageHours: Range;
   txns: Range;
   holders: Range;
-  holderGrowth: Range;
+  traderGrowth: Range;
   buySellRatio: Range;
-  liquidityChange: Range;
-  whale: Range;
-  smart: Range;
-  social: Range;
   wolfScore: Range;
   auditScore: Range;
   risk: Risk[];
@@ -39,12 +36,8 @@ const empty: Filters = {
   ageHours: ["", ""],
   txns: ["", ""],
   holders: ["", ""],
-  holderGrowth: ["", ""],
+  traderGrowth: ["", ""],
   buySellRatio: ["", ""],
-  liquidityChange: ["", ""],
-  whale: ["", ""],
-  smart: ["", ""],
-  social: ["", ""],
   wolfScore: ["", ""],
   auditScore: ["", ""],
   risk: [],
@@ -60,27 +53,24 @@ const fields: { key: keyof Filters; label: string; get: (t: Token) => number; un
   { key: "change24h", label: "Price Change 24h (%)", get: (t) => t.change24h },
   { key: "ageHours", label: "Token Age (hours)", get: (t) => t.ageMinutes / 60 },
   { key: "txns", label: "Transactions 24h", get: (t) => t.txns24h },
-  { key: "holders", label: "Holders", get: (t) => t.holders },
-  { key: "holderGrowth", label: "Holder Growth (%)", get: (t) => t.holderGrowth },
+  { key: "holders", label: "Holders (scanned tokens)", get: (t) => t.holders },
+  { key: "traderGrowth", label: "Trader Growth (%, 1h vs avg)", get: (t) => t.traderGrowth ?? t.holderGrowth },
   { key: "buySellRatio", label: "Buy/Sell Ratio", get: (t) => t.buys / (t.sells || 1) },
-  { key: "liquidityChange", label: "Liquidity Change (%)", get: (t) => t.liquidityChange },
-  { key: "whale", label: "Whale Activity (0–100)", get: (t) => t.whaleActivity },
-  { key: "smart", label: "Smart Money (0–100)", get: (t) => t.smartMoney },
-  { key: "social", label: "Social Activity (0–100)", get: (t) => t.social },
   { key: "wolfScore", label: "WOLF Score", get: (t) => t.wolfScore },
   { key: "auditScore", label: "Audit Score", get: (t) => t.auditScore },
 ];
 
 const presets: { name: string; f: Partial<Filters> }[] = [
   { name: "Safe-ish new gems", f: { ageHours: ["", 72], auditScore: [70, ""], liquidity: [50_000, ""] } },
-  { name: "Whale magnets", f: { whale: [70, ""], smart: [60, ""] } },
-  { name: "Holder momentum", f: { holderGrowth: [10, ""], buySellRatio: [1.2, ""] } },
+  { name: "Volume surge", f: { volumeChange: [100, ""], liquidity: [50_000, ""] } },
+  { name: "Trader momentum", f: { traderGrowth: [30, ""], buySellRatio: [1.1, ""] } },
   { name: "Verified only", f: { verifiedOnly: true, risk: ["Low"] } },
 ];
 
 const STORE = "wolf-screens";
 
 export function ScreenerClient() {
+  const market = useTokenList();
   const [f, setF] = useState<Filters>(empty);
   const [open, setOpen] = useState(false);
   const [saved, setSaved] = useState<{ name: string; f: Filters }[]>([]);
@@ -102,9 +92,11 @@ export function ScreenerClient() {
 
   const source = useMemo(
     () =>
-      tokens.filter((t) => {
+      market.tokens.filter((t) => {
         for (const fd of fields) {
           const [lo, hi] = f[fd.key] as Range;
+          if (lo === "" && hi === "") continue;
+          if (fd.key === "holders" && !t.holders) return false;
           const v = fd.get(t);
           if (lo !== "" && v < lo) return false;
           if (hi !== "" && v > hi) return false;
@@ -113,7 +105,7 @@ export function ScreenerClient() {
         if (f.verifiedOnly && !t.verified) return false;
         return true;
       }),
-    [f],
+    [f, market.tokens],
   );
 
   const active = fields.filter((fd) => (f[fd.key] as Range).some((x) => x !== "")).length + (f.risk.length ? 1 : 0) + (f.verifiedOnly ? 1 : 0);
@@ -239,7 +231,7 @@ export function ScreenerClient() {
         </>
       )}
 
-      <TokenTable source={source} pageSize={15} tabs={["trending", "gainers", "volume", "liquidity", "holders", "new", "wolf"]} defaultTab="trending" />
+      <TokenTable source={source} pageSize={15} tabs={["trending", "gainers", "volume", "holders", "new", "wolf"]} defaultTab="trending" />
     </div>
   );
 }

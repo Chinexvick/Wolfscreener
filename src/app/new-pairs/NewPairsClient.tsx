@@ -5,7 +5,9 @@ import Link from "next/link";
 import { useState } from "react";
 import { useChain } from "@/components/Shell";
 import { Chip, LpBadge, RiskBadge, ScoreRing, TokenAvatar, cx } from "@/components/ui";
-import { chainById, tokens } from "@/lib/data";
+import { chainById } from "@/lib/data";
+import { useNewPairs } from "@/lib/live/client";
+import { DataBadge } from "@/components/TokenTable";
 import { age, num, price, shortAddr, usd } from "@/lib/format";
 
 const windows = [
@@ -19,24 +21,32 @@ const windows = [
 
 export function NewPairsClient() {
   const { chain } = useChain();
+  const m = useNewPairs();
   const [win, setWin] = useState<number>(1440);
-  const list = tokens
-    .filter((t) => t.ageMinutes <= win && (chain === "all" || t.chain === chain))
+  const [hideTiny, setHideTiny] = useState(true);
+  const list = m.tokens
+    .filter((t) => t.ageMinutes <= win && (chain === "all" || t.chain === chain) && (!hideTiny || t.liquidity >= 2000))
     .sort((a, b) => a.ageMinutes - b.ageMinutes);
 
   return (
     <div className="space-y-4">
       <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 lg:mx-0 lg:px-0">
-        {windows.map(([l, m]) => (
-          <Chip key={l} active={win === m} onClick={() => setWin(m)}>
+        {windows.map(([l, mins]) => (
+          <Chip key={l} active={win === mins} onClick={() => setWin(mins)}>
             Last {l}
           </Chip>
         ))}
+        <Chip active={hideTiny} onClick={() => setHideTiny((v) => !v)}>
+          Hide pools under $2K
+        </Chip>
+        <span className="ml-auto shrink-0 self-center pl-2">
+          <DataBadge status={m.status} updated={m.updated} />
+        </span>
       </div>
-      {list.length === 0 && <div className="card p-10 text-center text-sm text-muted">No new pairs in this window yet. Try a longer window.</div>}
+      {m.status === "loading" && <div className="card h-40 animate-pulse" />}
+      {list.length === 0 && m.status !== "loading" && <div className="card p-10 text-center text-sm text-muted">No new pairs in this window yet. Try a longer window.</div>}
       <div className="grid grid-cols-[minmax(0,1fr)] gap-3 md:grid-cols-2 2xl:grid-cols-3">
         {list.map((t) => {
-          const initial = t.liquidity * 0.55;
           return (
             <Link key={t.id} href={`/token/${t.id}`} className="card block p-4 transition hover:border-brand/60">
               <div className="flex items-center gap-3">
@@ -58,12 +68,12 @@ export function NewPairsClient() {
               </div>
               <div className="mt-3 grid grid-cols-4 gap-2 rounded-xl bg-surface-2 p-2.5 text-[11px]">
                 {[
-                  ["Init. liq", usd(initial)],
+                  ["FDV", usd(t.fdv)],
                   ["Liquidity", usd(t.liquidity)],
                   ["Volume", usd(t.volume24h)],
-                  ["Holders", num(t.holders)],
-                  ["Buyers", num(t.buys)],
-                  ["Sellers", num(t.sells)],
+                  ["Holders", t.holders ? num(t.holders) : "—"],
+                  ["Buys 24h", num(t.buys)],
+                  ["Sells 24h", num(t.sells)],
                   ["Tax", `${t.buyTax}/${t.sellTax}%`],
                   ["Txns", num(t.txns24h)],
                 ].map(([l, v]) => (
@@ -77,7 +87,7 @@ export function NewPairsClient() {
                 <LpBadge status={t.lp} />
                 <RiskBadge risk={t.risk} />
                 <span className="inline-flex items-center gap-1 text-[11px] text-muted">
-                  <ShieldCheck className="size-3.5 text-accent" /> Audited
+                  <ShieldCheck className="size-3.5 text-accent" /> {t.scanned ? "Scanned" : "Not scanned"}
                 </span>
                 <span className="ml-auto flex items-center gap-2 text-muted">
                   <Globe className="size-4" />

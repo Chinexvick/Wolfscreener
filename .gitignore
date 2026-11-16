@@ -42,3 +42,4 @@ next-env.d.ts
 
 # framework-generated notes
 AGENTS.md
+!.env.example

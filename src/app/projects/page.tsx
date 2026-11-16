@@ -12,6 +12,7 @@ export default function ProjectsPage() {
   return (
     <>
       <PageHeader
+        sample="Project profiles and verification need accounts and review. These profiles are examples."
         icon={<Flame className="size-7 text-down" />}
         title="WOLF Projects"
         subtitle="Project profiles with verification that clearly states what was checked. Verification is not a guarantee of any project or token."

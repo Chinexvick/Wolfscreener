@@ -10,6 +10,7 @@ export default function WalletPage() {
   return (
     <>
       <PageHeader
+        sample="Real portfolios need an indexer key such as Moralis. Holdings shown here are examples."
         icon={<Wallet className="size-7 text-accent" />}
         title="Wallet Intelligence"
         subtitle="Enter any wallet or WOLF username to see holdings, transfers, P&L where calculable and activity patterns. Read-only, always."

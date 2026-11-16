@@ -27,7 +27,7 @@ export default function BoostPage() {
       <PageHeader
         icon={<Megaphone className="size-7 text-brand" />}
         title="WOLF Boost"
-        subtitle="Paid visibility for projects. Every paid placement is labeled PROMOTED or SPONSORED."
+        subtitle="Paid visibility for projects, launching soon. Every paid placement will be labeled PROMOTED or SPONSORED. Payments are not enabled yet."
       />
 
       <Card className="mb-4 overflow-hidden sm:mb-6">
@@ -56,7 +56,7 @@ export default function BoostPage() {
             {p.popular && <span className="absolute -top-3 left-5 rounded-full bg-brand px-3 py-0.5 text-[11px] font-bold text-white">Most popular</span>}
             <h3 className="font-display text-xl font-extrabold">{p.name}</h3>
             <p className="text-sm text-muted">{p.blurb}</p>
-            <div className="my-4 font-display text-2xl font-bold">Contact for pricing</div>
+            <div className="my-4 font-display text-2xl font-bold">Pricing soon</div>
             <ul className="flex-1 space-y-2 text-sm">
               {p.features.map((f) => (
                 <li key={f} className="flex gap-2">
@@ -65,7 +65,7 @@ export default function BoostPage() {
               ))}
             </ul>
             <Link href="/developer" className={cx("mt-5 rounded-xl py-2.5 text-center text-sm font-bold", p.popular ? "bg-brand text-white" : "border border-line")}>
-              Choose {p.name}
+              Register interest
             </Link>
           </Card>
         ))}

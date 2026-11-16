@@ -61,6 +61,19 @@ export interface Token {
   social: number;
   spark: number[];
   hue: number;
+  /** Set on tokens that come from live public APIs (absent on demo tokens). */
+  live?: boolean;
+  image?: string;
+  pool?: string;
+  dex?: string;
+  /** Unique-trader change, 1h vs the 24h hourly average (live tokens). */
+  traderGrowth?: number;
+  /** Number of risky contract flags found by the security scan. */
+  contractFlags?: number;
+  /** Share of supply held by the top 10 holders, excluding LP, burn and locked wallets. */
+  top10Pct?: number;
+  /** Whether a security scan covered this token's chain. */
+  scanned?: boolean;
 }
 
 function mulberry32(seed: number) {
@@ -207,7 +220,9 @@ export interface Check {
 export interface Category {
   key: string;
   label: string;
-  score: number;
+  /** null when no data source covers this category yet. */
+  score: number | null;
+  unavailable?: string;
   weight: number;
   positives: string[];
   risks: string[];
@@ -232,6 +247,7 @@ export interface WalletEdge {
 }
 
 export interface Audit {
+  live?: { sources: string[]; notes: Record<string, string> };
   token: Token;
   overall: number;
   updated: string;
@@ -247,6 +263,7 @@ export interface Audit {
     unlock: string;
     initial: number;
     events: { label: string; amount: number; when: string; type: "add" | "remove" }[];
+    holders?: { address: string; percent: number; locked: boolean; tag: string }[];
   };
   supply: { label: string; value: string }[];
   supplyNote: string;
@@ -357,8 +374,8 @@ export function buildAudit(token: Token): Audit {
     };
   });
   // Calibrate category scores so the weighted total matches the token's indexed audit score.
-  const raw = categories.reduce((a, c) => a + c.score * c.weight, 0) / 100;
-  for (const c of categories) c.score = Math.round(Math.max(5, Math.min(99, c.score + (s - raw))));
+  const raw = categories.reduce((a, c) => a + (c.score ?? 0) * c.weight, 0) / 100;
+  for (const c of categories) c.score = Math.round(Math.max(5, Math.min(99, (c.score ?? 0) + (s - raw))));
   const overall = s;
 
   const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -450,6 +467,8 @@ export interface FeedAlert {
   tokenId: string;
   when: string;
   usd?: number;
+  /** Snapshot of the token for live alerts, so links and logos work without the demo list. */
+  token?: Pick<Token, "id" | "symbol" | "image" | "hue">;
 }
 
 export const alertMeta: Record<AlertKind, { label: string; emoji: string; tone: "up" | "down" | "warn" | "brand" }> = {

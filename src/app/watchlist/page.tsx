@@ -4,12 +4,14 @@ import { Star } from "lucide-react";
 import Link from "next/link";
 import { TokenTable } from "@/components/TokenTable";
 import { PageHeader } from "@/components/ui";
-import { tokens } from "@/lib/data";
+import { useTokenList } from "@/lib/live/client";
 import { useWatchlist } from "@/lib/watchlist";
 
 export default function WatchlistPage() {
   const { ids } = useWatchlist();
-  const list = tokens.filter((t) => ids.includes(t.id));
+  const market = useTokenList();
+  const list = market.tokens.filter((t) => ids.includes(t.id));
+  const missing = ids.length - list.length;
   return (
     <>
       <PageHeader
@@ -18,7 +20,10 @@ export default function WatchlistPage() {
         subtitle="Tokens you follow. Your watchlist powers personalized alerts and your WOLF AI Daily Brief."
       />
       {list.length ? (
-        <TokenTable source={list} tabs={["wolf", "gainers", "volume"]} defaultTab="wolf" showPromoted={false} />
+        <>
+          <TokenTable source={list} tabs={["wolf", "gainers", "volume"]} defaultTab="wolf" showPromoted={false} />
+          {missing > 0 && <p className="mt-3 text-xs text-muted">{missing} followed token{missing > 1 ? "s are" : " is"} not in the current trending list. Open them from search to see live data.</p>}
+        </>
       ) : (
         <div className="card flex flex-col items-center gap-3 p-10 text-center">
           <Star className="size-10 text-brand" />

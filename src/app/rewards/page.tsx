@@ -23,7 +23,8 @@ export default function RewardsPage() {
   const next = levels[levels.indexOf(current) + 1];
   return (
     <>
-      <PageHeader icon={<Trophy className="size-7 text-brand" />} title="WOLF Rewards" subtitle="Earn XP for legitimate participation and learning — not for trading performance." />
+      <PageHeader
+        sample="XP and quests need accounts and a database. Progress here is an example." icon={<Trophy className="size-7 text-brand" />} title="WOLF Rewards" subtitle="Earn XP for legitimate participation and learning — not for trading performance." />
       <div className="grid grid-cols-[minmax(0,1fr)] gap-4 sm:gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)]">
         <div className="space-y-4 sm:space-y-6">
           <Card className="overflow-hidden">

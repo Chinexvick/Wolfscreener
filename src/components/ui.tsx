@@ -3,26 +3,14 @@ import { BadgeCheck, Flame, Lock, Unlock, CircleHelp } from "lucide-react";
 import type { ReactNode } from "react";
 import { chainById, type ChainId, type Confidence, type LpStatus, type Risk, type Token } from "@/lib/data";
 import { pct } from "@/lib/format";
+import { Avatar } from "./Avatar";
 
 export function cx(...c: (string | false | null | undefined)[]) {
   return c.filter(Boolean).join(" ");
 }
 
-export function TokenAvatar({ token, size = 36 }: { token: Pick<Token, "symbol" | "hue">; size?: number }) {
-  return (
-    <span
-      className="inline-grid shrink-0 place-items-center rounded-full font-display font-bold text-white ring-2 ring-surface"
-      style={{
-        width: size,
-        height: size,
-        fontSize: size * 0.34,
-        background: `linear-gradient(135deg, hsl(${token.hue} 70% 55%), hsl(${(token.hue + 40) % 360} 65% 38%))`,
-      }}
-      aria-hidden
-    >
-      {token.symbol.slice(0, 2)}
-    </span>
-  );
+export function TokenAvatar({ token, size = 36 }: { token: Pick<Token, "symbol" | "hue" | "image">; size?: number }) {
+  return <Avatar symbol={token.symbol} hue={token.hue} image={token.image} size={size} />;
 }
 
 export function ChainDot({ chain, label = false }: { chain: ChainId; label?: boolean }) {
@@ -159,7 +147,7 @@ export function CardHeader({ icon, title, action, href }: { icon?: ReactNode; ti
   );
 }
 
-export function PageHeader({ title, subtitle, icon, children }: { title: string; subtitle?: string; icon?: ReactNode; children?: ReactNode }) {
+export function PageHeader({ title, subtitle, icon, children, sample }: { title: string; subtitle?: string; icon?: ReactNode; children?: ReactNode; sample?: string }) {
   return (
     <div className="mb-4 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:items-end sm:justify-between">
       <div>
@@ -168,6 +156,12 @@ export function PageHeader({ title, subtitle, icon, children }: { title: string;
           {title}
         </h1>
         {subtitle && <p className="mt-1 max-w-2xl text-sm text-muted">{subtitle}</p>}
+        {sample && (
+          <p className="mt-2 inline-flex max-w-2xl items-start gap-2 rounded-xl bg-warn-soft px-3 py-2 text-xs text-warn">
+            <span className="mt-px shrink-0 rounded bg-warn px-1.5 py-px text-[10px] font-bold tracking-wide text-white">SAMPLE DATA</span>
+            <span>{sample}</span>
+          </p>
+        )}
       </div>
       {children}
     </div>

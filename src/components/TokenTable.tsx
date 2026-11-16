@@ -3,9 +3,10 @@
 import { ChevronLeft, ChevronRight, Eye, ShieldCheck, Star } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { narratives, tokens as allTokens, type Narrative, type Token } from "@/lib/data";
+import { narratives, type Narrative, type Token } from "@/lib/data";
+import { useTokenList } from "@/lib/live/client";
 import { age, num, price, usd } from "@/lib/format";
-import { useLiveTokens, type LiveToken } from "@/lib/live";
+import { useLiveTokens, type LiveToken } from "@/lib/ticker";
 import { useWatchlist } from "@/lib/watchlist";
 import { useChain } from "./Shell";
 import { Change, ChainDot, Chip, PromotedTag, RiskBadge, ScoreRing, TokenAvatar, VerifiedBadge, cx } from "./ui";
@@ -15,7 +16,7 @@ export const tableTabs = {
   trending: { label: "Trending", sort: (a: Token, b: Token) => b.volume24h * (1 + b.social / 100) - a.volume24h * (1 + a.social / 100) },
   volume: { label: "Volume Surge", sort: (a: Token, b: Token) => b.volumeChange - a.volumeChange },
   liquidity: { label: "Liquidity Surge", sort: (a: Token, b: Token) => b.liquidityChange - a.liquidityChange },
-  holders: { label: "Holder Growth", sort: (a: Token, b: Token) => b.holderGrowth - a.holderGrowth },
+  holders: { label: "Trader Growth", sort: (a: Token, b: Token) => (b.traderGrowth ?? b.holderGrowth) - (a.traderGrowth ?? a.holderGrowth) },
   new: { label: "New", sort: (a: Token, b: Token) => a.ageMinutes - b.ageMinutes },
   wolf: { label: "WOLF Score", sort: (a: Token, b: Token) => b.wolfScore - a.wolfScore },
 } as const;
@@ -138,8 +139,40 @@ function RiskBadgeInline({ risk }: { risk: Token["risk"] }) {
   return <span className={cx("font-semibold", risk === "Low" ? "text-up" : risk === "Medium" ? "text-warn" : "text-down")}>{risk} risk</span>;
 }
 
+export function DataBadge({ status, updated }: { status: "loading" | "live" | "demo"; updated?: number | null }) {
+  if (status === "loading") return <span className="rounded-full bg-surface-3 px-2.5 py-1 text-[10px] font-bold tracking-wide text-muted">LOADING…</span>;
+  if (status === "demo")
+    return (
+      <span title="Live data sources were unreachable, so sample data is shown" className="rounded-full bg-warn-soft px-2.5 py-1 text-[10px] font-bold tracking-wide text-warn">
+        SAMPLE DATA
+      </span>
+    );
+  return (
+    <span title={updated ? `Updated ${new Date(updated).toLocaleTimeString()}` : undefined} className="inline-flex items-center gap-1.5 rounded-full bg-up-soft px-2.5 py-1 text-[10px] font-bold tracking-wide text-up">
+      <span className="live-dot size-1.5 rounded-full bg-up" /> LIVE
+    </span>
+  );
+}
+
+function SkeletonRows({ n = 8 }: { n?: number }) {
+  return (
+    <div className="divide-y divide-line">
+      {Array.from({ length: n }, (_, i) => (
+        <div key={i} className="flex animate-pulse items-center gap-3 px-4 py-3.5">
+          <div className="size-9 rounded-full bg-surface-3" />
+          <div className="flex-1 space-y-2">
+            <div className="h-3 w-24 rounded bg-surface-3" />
+            <div className="h-2.5 w-36 rounded bg-surface-3" />
+          </div>
+          <div className="h-4 w-16 rounded bg-surface-3" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function TokenTable({
-  source = allTokens,
+  source: sourceProp,
   defaultTab = "gainers",
   tabs = ["gainers", "trending", "volume", "liquidity", "holders", "wolf"],
   pageSize = 10,
@@ -158,7 +191,10 @@ export function TokenTable({
   const [narrative, setNarrative] = useState<Narrative | "all">("all");
   const [q, setQ] = useState("");
   const [page, setPage] = useState(0);
+  const market = useTokenList();
+  const source = sourceProp ?? market.tokens;
   const live = useLiveTokens(source);
+  const status = sourceProp ? (sourceProp.some((t) => t.live) ? "live" : market.status) : market.status;
 
   const filtered = useMemo(() => {
     const s = q.trim().toLowerCase();
@@ -177,7 +213,10 @@ export function TokenTable({
   return (
     <div className="card overflow-hidden">
       <div className="space-y-3 p-4 pb-3">
-        {title && <h2 className="font-display text-[15px] font-bold">{title}</h2>}
+        <div className="flex items-center justify-between gap-2">
+          {title ? <h2 className="font-display text-[15px] font-bold">{title}</h2> : <span />}
+          <DataBadge status={status} updated={market.updated} />
+        </div>
         {tabs.length > 1 && (
           <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4">
             {tabs.map((k) => (
@@ -225,6 +264,8 @@ export function TokenTable({
         </div>
       </div>
 
+      {status === "loading" && !live.length && <SkeletonRows />}
+
       {/* Desktop */}
       <div className="hidden overflow-x-auto md:block">
         <table className="w-full min-w-[980px] text-left">
@@ -265,7 +306,7 @@ export function TokenTable({
         ))}
       </div>
 
-      {rows.length === 0 && <div className="border-t border-line p-8 text-center text-sm text-muted">No tokens match these filters.</div>}
+      {rows.length === 0 && status !== "loading" && <div className="border-t border-line p-8 text-center text-sm text-muted">No tokens match these filters.</div>}
 
       <div className="flex items-center justify-between border-t border-line px-4 py-3 text-xs text-muted">
         <span>

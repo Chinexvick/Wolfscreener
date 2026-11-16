@@ -18,7 +18,8 @@ const areas = ["Users", "Projects", "Tokens", "Audits", "Verification", "Reports
 export default function AdminPage() {
   return (
     <>
-      <PageHeader icon={<Settings className="size-7 text-muted" />} title="Admin" subtitle="Platform management. Promotions are managed separately from audit and risk data, which admins cannot edit." />
+      <PageHeader
+        sample="Admin tools need accounts and a database. Counts here are examples." icon={<Settings className="size-7 text-muted" />} title="Admin" subtitle="Platform management. Promotions are managed separately from audit and risk data, which admins cannot edit." />
       <Card className="mb-4 grid grid-cols-2 gap-4 p-4 sm:mb-6 sm:grid-cols-4">
         <Stat label="Users" value="184.2K" sub="+2.1K today" tone="up" />
         <Stat label="Tokens indexed" value="1.92M" />

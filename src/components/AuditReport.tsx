@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { buildAudit, chainById, feed, type Audit, type CheckStatus, type Token } from "@/lib/data";
+import { explorerAddressUrl } from "@/lib/live/config";
 import { shortAddr, usd } from "@/lib/format";
 import { AreaChart, Donut } from "./charts";
 import { Bar, Card, CardHeader, ConfidenceTag, LpBadge, RiskBadge, ScoreRing, TokenAvatar, VerifiedBadge, cx, scoreColor } from "./ui";
@@ -57,12 +58,13 @@ function CategoryRow({ c }: { c: Audit["categories"][number] }) {
       <button type="button" onClick={() => setOpen((o) => !o)} className="flex w-full items-center gap-3 px-4 py-3 text-left" aria-expanded={open}>
         <span className="w-36 shrink-0 text-sm font-semibold sm:w-44">{c.label}</span>
         <span className="flex-1">
-          <Bar value={c.score} color={scoreColor(c.score)} />
+          <Bar value={c.score ?? 0} color={c.score === null ? "var(--surface-3)" : scoreColor(c.score)} />
         </span>
-        <span className="tabular w-8 text-right text-sm font-bold">{c.score}</span>
+        <span className="tabular w-8 text-right text-sm font-bold">{c.score ?? "n/a"}</span>
         <ChevronDown className={cx("size-4 text-muted transition", open && "rotate-180")} />
       </button>
-      {open && (
+      {open && c.score === null && <p className="px-4 pb-4 text-xs text-muted">{c.unavailable ?? "No data source yet."} This category is left out of the overall score.</p>}
+      {open && c.score !== null && (
         <div className="grid gap-3 px-4 pb-4 text-xs sm:grid-cols-2">
           <div className="rounded-xl bg-up-soft/60 p-3">
             <div className="mb-1 font-bold text-up">Positive indicators</div>
@@ -146,11 +148,12 @@ function WalletGraph({ a }: { a: Audit }) {
   );
 }
 
-export function AuditReport({ token, compact }: { token: Token; compact?: boolean }) {
-  const a = buildAudit(token);
+export function AuditReport({ token, compact, audit, whales }: { token: Token; compact?: boolean; audit?: Audit; whales?: React.ReactNode }) {
+  const a = audit ?? buildAudit(token);
+  const live = a.live;
   const [monitoring, setMonitoring] = useState(false);
   const tokenAlerts = feed.filter((f) => f.tokenId === token.id || f.kind === "whale").slice(0, 3);
-  const prev = a.history[a.history.length - 2];
+  const prev = a.history[a.history.length - 2] ?? a.history[0];
 
   return (
     <div className="space-y-4 sm:space-y-5">
@@ -189,7 +192,7 @@ export function AuditReport({ token, compact }: { token: Token; compact?: boolea
                   <span className="text-lg text-white/60">/100</span>
                 </div>
                 <div className="text-xs text-white/70">
-                  Updated {a.updated} · {prev.score !== a.overall && <>was {prev.score} yesterday</>}
+                  Updated {a.updated}{!live && prev.score !== a.overall && <> · was {prev.score} yesterday</>}
                 </div>
               </div>
             </div>
@@ -239,9 +242,13 @@ export function AuditReport({ token, compact }: { token: Token; compact?: boolea
 
         <Card>
           <CardHeader icon={<Info className="size-4 text-accent" />} title="Audit history — why it changed" />
-          <div className="px-4">
-            <AreaChart data={a.history.map((h) => h.score)} height={90} color={scoreColor(a.overall)} />
-          </div>
+          {live ? (
+            <p className="px-4 pb-2 text-xs text-muted">{live.notes.history}</p>
+          ) : (
+            <div className="px-4">
+              <AreaChart data={a.history.map((h) => h.score)} height={90} color={scoreColor(a.overall)} />
+            </div>
+          )}
           <ul className="divide-y divide-line">
             {[...a.history].reverse().map((h, i, arr) => {
               const before = arr[i + 1]?.score;
@@ -295,14 +302,29 @@ export function AuditReport({ token, compact }: { token: Token; compact?: boolea
               ))}
               <div className="grid grid-cols-2 gap-2 rounded-xl bg-surface-2 p-3 text-xs">
                 <div>
-                  <div className="text-muted">Initial liquidity</div>
-                  <div className="font-bold">{usd(a.lp.initial)}</div>
+                  <div className="text-muted">{live ? "Pool age" : "Initial liquidity"}</div>
+                  <div className="font-bold">{live ? `${Math.round(token.ageMinutes / 60 / 24)} days` : usd(a.lp.initial)}</div>
                 </div>
                 <div>
                   <div className="text-muted">Current liquidity</div>
                   <div className="font-bold">{usd(token.liquidity)}</div>
                 </div>
               </div>
+              {live && <p className="text-[11px] text-muted">{live.notes.lpEvents}</p>}
+              {live && a.lp.holders && a.lp.holders.length > 0 && (
+                <ul className="space-y-1.5 text-xs">
+                  {a.lp.holders.slice(0, 5).map((h) => (
+                    <li key={h.address} className="flex justify-between gap-3">
+                      <a href={explorerAddressUrl(token.chain, h.address)} target="_blank" rel="noreferrer" className="truncate font-mono text-accent hover:underline">
+                        {shortAddr(h.address)}
+                      </a>
+                      <span>
+                        <b>{h.percent.toFixed(1)}%</b> <span className="text-muted">{/dead|null|burn|^0x0{40}$/i.test(h.address + h.tag) ? "burned" : h.locked ? "locked" : "unlocked"}{h.tag ? ` · ${h.tag}` : ""}</span>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
               <ul className="space-y-1.5 text-xs">
                 {a.lp.events.map((e, i) => (
                   <li key={i} className="flex justify-between">
@@ -321,9 +343,30 @@ export function AuditReport({ token, compact }: { token: Token; compact?: boolea
       </div>
 
       <Card>
-        <CardHeader icon={<GitBranch className="size-4 text-accent" />} title="Developer wallet movement graph" />
-        <WalletGraph a={a} />
-        <div className="border-t border-line px-4 py-3">
+        <CardHeader icon={<GitBranch className="size-4 text-accent" />} title={live ? "Control wallets" : "Developer wallet movement graph"} />
+        {live ? (
+          <div className="px-4 pb-4">
+            <p className="mb-3 text-xs text-muted">{live.notes.graph}</p>
+            {a.nodes.length === 0 ? (
+              <p className="text-sm text-muted">No wallet data is available for this token yet.</p>
+            ) : (
+              <ul className="divide-y divide-line rounded-xl border border-line">
+                {a.nodes.map((n) => (
+                  <li key={n.id} className="flex items-center gap-3 px-3 py-2.5 text-sm">
+                    <span className="w-32 shrink-0 font-semibold">{n.role}</span>
+                    <a href={explorerAddressUrl(token.chain, n.address)} target="_blank" rel="noreferrer" className="min-w-0 flex-1 truncate font-mono text-xs text-accent hover:underline">
+                      {n.address}
+                    </a>
+                    <span className="tabular w-14 text-right text-xs font-semibold">{n.holdingPct > 0 ? `${n.holdingPct}%` : "-"}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ) : (
+          <WalletGraph a={a} />
+        )}
+        <div className={cx("border-t border-line px-4 py-3", live && "hidden")}>
           <div className="mb-2 text-xs font-bold text-muted uppercase">Developer wallet monitoring</div>
           <ul className="space-y-2">
             {a.devActivity.map((d) => (
@@ -343,7 +386,8 @@ export function AuditReport({ token, compact }: { token: Token; compact?: boolea
         <Card>
           <CardHeader icon={<PieChart className="size-4 text-brand" />} title="Token distribution" />
           <div className="flex flex-col items-center gap-4 px-4 pb-4 sm:flex-row lg:flex-col xl:flex-row">
-            <Donut parts={a.distribution} size={140} center={<span className="text-xs font-bold text-muted">Supply</span>} />
+            {a.distribution.length === 0 && <p className="text-sm text-muted">Holder data is not available for this token.</p>}
+            {a.distribution.length > 0 && <Donut parts={a.distribution} size={140} center={<span className="text-xs font-bold text-muted">Supply</span>} />}
             <ul className="w-full space-y-1.5 text-xs">
               {a.distribution.map((d) => (
                 <li key={d.label} className="flex items-center gap-2">
@@ -394,14 +438,12 @@ export function AuditReport({ token, compact }: { token: Token; compact?: boolea
       <Card>
         <CardHeader icon={<Fish className="size-4 text-brand" />} title="Whale risk analysis" action="Whale radar" href="/whales" />
         <div className="px-2 pb-2">
-          {tokenAlerts.map((x) => (
-            <AlertRow key={x.id} a={x} />
-          ))}
+          {live ? whales ?? <p className="px-2 pb-2 text-sm text-muted">No large trades in the latest window.</p> : tokenAlerts.map((x) => <AlertRow key={x.id} a={x} />)}
         </div>
       </Card>
 
       <p className="text-center text-[11px] text-muted">
-        Data sources: chain RPC, block explorer verified source, DEX pair contracts, LP lockers, transaction simulation, WOLF wallet labels. Scores
+        Data sources: {live ? live.sources.join(" · ") : "chain RPC, block explorer verified source, DEX pair contracts, LP lockers, transaction simulation, WOLF wallet labels"}. Scores
         are computed from documented, measurable inputs and are never influenced by paid promotion. Not financial advice.
       </p>
     </div>

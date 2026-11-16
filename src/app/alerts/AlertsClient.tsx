@@ -4,7 +4,9 @@ import { Plus, Send, Share2, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Card, CardHeader, Chip, cx } from "@/components/ui";
 import { AlertRow } from "@/components/widgets";
-import { alertMeta, feed, tokens, type AlertKind } from "@/lib/data";
+import { alertMeta, type AlertKind } from "@/lib/data";
+import { useFeed, useTokenList } from "@/lib/live/client";
+import { DataBadge } from "@/components/TokenTable";
 
 const triggers = [
   "Whale buy",
@@ -34,16 +36,17 @@ interface Rule {
 }
 
 export function AlertsClient() {
-  const [rules, setRules] = useState<Rule[]>([
-    { token: tokens[0].id, trigger: "Liquidity removal", threshold: "$50K", channels: ["In-app", "Telegram"] },
-    { token: tokens[1].id, trigger: "Developer movement", threshold: "1% supply", channels: ["Push"] },
-  ]);
-  const [draft, setDraft] = useState<Rule>({ token: tokens[2].id, trigger: triggers[0], threshold: "$100K", channels: ["In-app"] });
+  const market = useTokenList();
+  const { feed, status, updated, loading } = useFeed();
+  const tokens = [...market.tokens].sort((a, b) => b.liquidity - a.liquidity).slice(0, 60);
+  const [rules, setRules] = useState<Rule[]>([]);
+  const [draft, setDraft] = useState<Rule>({ token: "", trigger: triggers[0], threshold: "$100K", channels: ["In-app"] });
+  const draftToken = draft.token || tokens[0]?.id || "";
   const [kind, setKind] = useState<AlertKind | "all">("all");
   const [shared, setShared] = useState<string | null>(null);
 
   const sample = feed[0];
-  const shareText = `🐋 WOLF ALERT\n${sample.body}\nView wallet activity on WOLF.`;
+  const shareText = `🐋 WOLF ALERT\n${sample?.body ?? "Large trade detected."}\nView it on WOLF Screener.`;
 
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-4 sm:gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
@@ -51,7 +54,7 @@ export function AlertsClient() {
         <Card className="p-4">
           <h2 className="mb-3 font-display text-[15px] font-bold">Create alert</h2>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-            <select value={draft.token} onChange={(e) => setDraft({ ...draft, token: e.target.value })} className="h-10 rounded-xl border border-line bg-surface-2 px-3 text-sm">
+            <select value={draftToken} onChange={(e) => setDraft({ ...draft, token: e.target.value })} className="h-10 rounded-xl border border-line bg-surface-2 px-3 text-sm">
               {tokens.map((t) => (
                 <option key={t.id} value={t.id}>
                   ${t.symbol}
@@ -83,7 +86,7 @@ export function AlertsClient() {
           </div>
           <button
             type="button"
-            onClick={() => setRules([...rules, draft])}
+            onClick={() => draftToken && setRules([...rules, { ...draft, token: draftToken }])}
             className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-2.5 text-sm font-bold text-white sm:w-auto sm:px-5"
           >
             <Plus className="size-4" /> Add alert
@@ -92,14 +95,15 @@ export function AlertsClient() {
 
         <Card>
           <CardHeader title={`Your alerts (${rules.length})`} />
+          {rules.length === 0 && <p className="px-4 pb-4 text-sm text-muted">No alert rules yet. Create one above. Rules are stored on this device until accounts are connected.</p>}
           <ul>
             {rules.map((r, i) => {
-              const t = tokens.find((x) => x.id === r.token)!;
+              const t = market.tokens.find((x) => x.id === r.token);
               return (
                 <li key={i} className="flex items-center gap-3 border-t border-line px-4 py-3 text-sm">
                   <div className="min-w-0 flex-1">
                     <div className="font-semibold">
-                      ${t.symbol} · {r.trigger}
+                      ${t?.symbol ?? "?"} · {r.trigger}
                     </div>
                     <div className="text-xs text-muted">
                       ≥ {r.threshold} · {r.channels.join(", ")}
@@ -140,6 +144,9 @@ export function AlertsClient() {
 
       <Card>
         <CardHeader title="Alert inbox" />
+        <div className="-mt-1 px-4 pb-2">
+          <DataBadge status={status} updated={updated} />
+        </div>
         <div className="no-scrollbar flex gap-2 overflow-x-auto px-4 pb-2">
           <Chip active={kind === "all"} onClick={() => setKind("all")}>
             All
@@ -151,6 +158,8 @@ export function AlertsClient() {
           ))}
         </div>
         <div className={cx("px-2 pb-2")}>
+          {loading && <div className="h-24 animate-pulse rounded-xl bg-surface-3" />}
+          {!loading && feed.filter((a) => kind === "all" || a.kind === kind).length === 0 && <p className="px-2 pb-2 text-sm text-muted">Nothing in this category right now.</p>}
           {feed
             .filter((a) => kind === "all" || a.kind === kind)
             .slice(0, 20)

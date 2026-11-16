@@ -11,7 +11,7 @@ interface Delta {
   tick?: "up" | "down";
 }
 
-// Simulated streaming updates on top of the demo snapshot. Swap for a websocket feed.
+// Simulated price ticks for DEMO tokens only. Real tokens are never altered.
 export function useLiveTokens(source: Token[], intervalMs = 2500): LiveToken[] {
   const [deltas, setDeltas] = useState<Record<string, Delta>>({});
   const ids = useRef<string[]>([]);
@@ -19,7 +19,9 @@ export function useLiveTokens(source: Token[], intervalMs = 2500): LiveToken[] {
     ids.current = source.map((t) => t.id);
   }, [source]);
 
+  const isDemo = !source[0]?.live;
   useEffect(() => {
+    if (!isDemo) return;
     const timer = setInterval(() => {
       setDeltas((prev) => {
         const next: Record<string, Delta> = {};
@@ -36,11 +38,13 @@ export function useLiveTokens(source: Token[], intervalMs = 2500): LiveToken[] {
       });
     }, intervalMs);
     return () => clearInterval(timer);
-  }, [intervalMs]);
+  }, [intervalMs, isDemo]);
 
   return useMemo(
     () =>
-      source.map((t) => {
+      !isDemo
+        ? source
+        : source.map((t) => {
         const d = deltas[t.id];
         if (!d) return t;
         return {
@@ -52,6 +56,6 @@ export function useLiveTokens(source: Token[], intervalMs = 2500): LiveToken[] {
           tick: d.tick,
         };
       }),
-    [source, deltas],
+    [source, deltas, isDemo],
   );
 }

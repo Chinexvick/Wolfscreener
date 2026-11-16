@@ -3,7 +3,8 @@
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { LpBadge, TokenAvatar, cx } from "@/components/ui";
-import { buildAudit, chainById, tokenById, tokens, type Token } from "@/lib/data";
+import { chainById, type Token } from "@/lib/data";
+import { useTokenList } from "@/lib/live/client";
 import { num, pct, usd } from "@/lib/format";
 
 const rows: { label: string; get: (t: Token) => React.ReactNode }[] = [
@@ -12,25 +13,23 @@ const rows: { label: string; get: (t: Token) => React.ReactNode }[] = [
   { label: "FDV", get: (t) => usd(t.fdv) },
   { label: "Liquidity", get: (t) => usd(t.liquidity) },
   { label: "24h Volume", get: (t) => usd(t.volume24h) },
-  { label: "Holders", get: (t) => num(t.holders) },
-  { label: "Holder growth", get: (t) => pct(t.holderGrowth, 1) },
-  { label: "Audit score", get: (t) => `${buildAudit(t).overall}/100` },
-  { label: "Contract permissions", get: (t) => `${buildAudit(t).contract.filter((c) => c.status === "fail" || c.status === "warn").length} flagged` },
+  { label: "Holders", get: (t) => (t.holders ? num(t.holders) : "n/a") },
+  { label: "Trader growth (1h)", get: (t) => pct(t.traderGrowth ?? t.holderGrowth, 0) },
+  { label: "Price 24h", get: (t) => pct(t.change24h, 1) },
+  { label: "Audit score", get: (t) => `${t.auditScore}/100` },
+  { label: "Contract flags", get: (t) => (t.contractFlags === undefined ? "Not scanned" : `${t.contractFlags} flagged`) },
   { label: "LP status", get: (t) => <LpBadge status={t.lp} /> },
-  { label: "Top 10 (adjusted)", get: (t) => `${buildAudit(t).concentration[2].adjusted}%` },
-  { label: "Whale activity", get: (t) => `${t.whaleActivity}/100` },
-  { label: "Developer activity", get: (t) => buildAudit(t).categories.find((c) => c.key === "dev")!.score + "/100" },
-  { label: "Social activity", get: (t) => `${t.social}/100` },
+  { label: "Top 10 holders (adjusted)", get: (t) => (t.top10Pct === undefined ? "n/a" : `${t.top10Pct}%`) },
   { label: "Tax (buy/sell)", get: (t) => `${t.buyTax}% / ${t.sellTax}%` },
   { label: "Narrative", get: (t) => t.narrative },
 ];
 
-function Picker({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+function Picker({ value, onChange, list }: { value: string; onChange: (v: string) => void; list: Token[] }) {
   return (
     <select value={value} onChange={(e) => onChange(e.target.value)} className="h-11 w-full rounded-xl border border-line bg-surface px-3 text-sm font-semibold outline-none focus:border-brand">
-      {tokens.map((t) => (
+      {list.map((t) => (
         <option key={t.id} value={t.id}>
-          {t.symbol}
+          {t.symbol} · {chainById[t.chain].short}
         </option>
       ))}
     </select>
@@ -39,10 +38,15 @@ function Picker({ value, onChange }: { value: string; onChange: (v: string) => v
 
 export function CompareClient() {
   const params = useSearchParams();
-  const [a, setA] = useState(params.get("a") ?? tokens[1].id);
-  const [b, setB] = useState(params.get("b") ?? tokens[7].id);
-  const ta = tokenById(a)!;
-  const tb = tokenById(b)!;
+  const market = useTokenList();
+  const list = [...market.tokens].sort((x, y) => y.liquidity - x.liquidity).slice(0, 80);
+  const [pickA, setA] = useState(params.get("a") ?? "");
+  const [pickB, setB] = useState(params.get("b") ?? "");
+  if (market.status === "loading" || list.length < 2) return <div className="card h-64 animate-pulse" />;
+  const a = list.some((t) => t.id === pickA) ? pickA : list[0].id;
+  const b = list.some((t) => t.id === pickB) ? pickB : list[1].id;
+  const ta = list.find((t) => t.id === a)!;
+  const tb = list.find((t) => t.id === b)!;
   return (
     <div className="card overflow-hidden">
       <div className="grid grid-cols-2 gap-3 p-4">
@@ -55,7 +59,7 @@ export function CompareClient() {
               <TokenAvatar token={t as Token} size={36} />
               <span className="font-display text-lg font-bold">{(t as Token).symbol}</span>
             </div>
-            <Picker value={v as string} onChange={set as (v: string) => void} />
+            <Picker list={list} value={v as string} onChange={set as (v: string) => void} />
           </div>
         ))}
       </div>

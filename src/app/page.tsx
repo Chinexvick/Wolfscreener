@@ -5,7 +5,6 @@ import {
   AiInsights,
   AlertFeed,
   BreakoutRadar,
-  CommunityActivity,
   MarketOverview,
   NarrativeMini,
   NewPairsMini,
@@ -81,7 +80,6 @@ export default function Home() {
         <RecentlyAudited />
         <div className="space-y-4 sm:space-y-6 md:col-span-2 xl:col-span-1">
           <VerifiedProjects />
-          <CommunityActivity />
         </div>
       </div>
 
