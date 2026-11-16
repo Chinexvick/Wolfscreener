@@ -45,6 +45,8 @@ const KEYWORDS: [Narrative, RegExp][] = [
 /** Narrative is inferred from the token name and symbol. Everything else defaults to Memes. */
 export function classify(name: string, symbol: string): Narrative {
   const text = `${name} ${symbol}`;
+  // Stablecoins, staked and wrapped assets are finance, not memes. Ticker prefixes like stSUI, sAVAX, wETH are case-sensitive.
+  if (/^(st|s|w)[A-Z]{2,}$/.test(symbol) || /usd|\beur(o|c)?\b|stable|staked|staking|wrapped|liquid staking|bitcoin/i.test(text)) return "DeFi";
   for (const [n, re] of KEYWORDS) if (re.test(text)) return n;
   return "Memes";
 }

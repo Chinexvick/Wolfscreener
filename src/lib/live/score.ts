@@ -33,7 +33,8 @@ export function adjustedTop(s: Security, n: number): number {
   const rows = s.holders.filter(
     (h) => !h.locked && !/dead|burn/i.test(h.tag + h.address) && !lpAddrs.has(h.address.toLowerCase()) && !/pancake|uniswap|raydium|sushi|pool|pair/i.test(h.tag),
   );
-  return Math.round(rows.slice(0, n).reduce((a, h) => a + h.percent, 0) * 10) / 10;
+  // Wrapped and bridged tokens can report holder shares that add up past 100%, so cap it.
+  return Math.min(100, Math.round(rows.slice(0, n).reduce((a, h) => a + h.percent, 0) * 10) / 10);
 }
 
 export interface Score {
@@ -262,7 +263,7 @@ export function buildLiveAudit(t: Token, s: Security | null): Audit {
     : [];
 
   const concentration = holders.length
-    ? [1, 5, 10].map((n) => ({ tier: `Top ${n}`, raw: Math.round(holders.slice(0, n).reduce((a, h) => a + h.percent, 0) * 10) / 10, adjusted: adjustedTop(s!, n) }))
+    ? [1, 5, 10].map((n) => ({ tier: `Top ${n}`, raw: Math.min(100, Math.round(holders.slice(0, n).reduce((a, h) => a + h.percent, 0) * 10) / 10), adjusted: adjustedTop(s!, n) }))
     : [];
 
   const nodes: Audit["nodes"] = [];
